@@ -1,0 +1,8 @@
+*.bak
+*.bak2
+*.test
+*.test2
+.DS_Store
+Thumbs.db
+node_modules/
+api/node_modules/

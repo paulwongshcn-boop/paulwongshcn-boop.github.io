@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head><title>Stark Basic</title></head>
+<body>
+<div id="app">
+  <h1>{{ msg }}</h1>
+  <p v-text="msg2"></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+<script>
+const {createApp,ref}=Vue;
+createApp({
+  setup(){
+    const msg=ref('STARK INDUSTRIES ONLINE');
+    const msg2=ref('Vue 3 mounted successfully');
+    return{msg,msg2}
+  }
+}).mount('#app');
+</script>
+</body>
+</html>

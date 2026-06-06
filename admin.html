@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>斯塔克工业商店 - 管理中心</title>
+<style>
+:root{--neon:#39ff14;--neon-dim:#1a7a0a;--neon-bg:#050a03;--card-bg:rgba(5,10,3,0.85)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:var(--neon-bg);color:#c8f7c0;min-height:100vh}
+.container{max-width:800px;margin:0 auto;padding:40px 20px}
+h1{text-align:center;font-size:2rem;margin-bottom:8px;text-shadow:0 0 10px var(--neon)}
+.subtitle{text-align:center;color:#4a8a40;margin-bottom:40px;font-family:monospace}
+.card{background:var(--card-bg);border:1px solid rgba(57,255,20,0.12);border-radius:12px;padding:24px;margin-bottom:20px;transition:all .3s}
+.card:hover{border-color:rgba(57,255,20,0.3);box-shadow:0 4px 20px rgba(57,255,20,0.1)}
+.card h2{color:var(--neon);font-size:1.1rem;margin-bottom:12px;font-family:monospace}
+.card p{color:#7aa872;font-size:.9rem;line-height:1.6;margin-bottom:12px}
+.btn{display:inline-block;padding:10px 24px;border-radius:6px;border:1px solid var(--neon);background:rgba(57,255,20,0.05);color:var(--neon);cursor:pointer;font-family:monospace;font-size:.85rem;text-decoration:none;transition:all .3s;margin-right:8px;margin-bottom:8px}
+.btn:hover{background:var(--neon);color:#000;box-shadow:0 0 20px rgba(57,255,20,0.3)}
+.btn-primary{background:var(--neon);color:#000;border:1px solid var(--neon)}
+.btn-primary:hover{background:#6bff47}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.info-item label{color:#4a8a40;font-size:.8rem;font-family:monospace;display:block;margin-bottom:4px}
+.info-item .value{color:#c8f7c0;font-size:.95rem}
+.platform-tabs{display:flex;gap:8px;margin-bottom:16px}
+.platform-tab{padding:8px 16px;border:1px solid rgba(57,255,20,0.2);border-radius:6px;cursor:pointer;background:transparent;color:#4a8a40;font-family:monospace;font-size:.8rem;transition:all .3s}
+.platform-tab.active,.platform-tab:hover{background:rgba(57,255,20,0.1);color:var(--neon);border-color:var(--neon)}
+.platform-content{display:none}
+.platform-content.active{display:block}
+code{background:rgba(57,255,20,0.08);padding:2px 6px;border-radius:3px;font-size:.8rem;color:var(--neon)}
+pre{background:rgba(0,0,0,0.5);padding:12px;border-radius:6px;overflow-x:auto;margin:8px 0;font-size:.8rem;color:#7aa872;border:1px solid rgba(57,255,20,0.08)}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>⚡ 斯塔克工业商店</h1>
+  <p class="subtitle">[ 管理控制中心 ]</p>
+
+  <div class="card">
+    <h2>🔐 服务器信息</h2>
+    <div class="info-grid">
+      <div class="info-item"><label>IP 地址</label><div class="value">198.23.209.22</div></div>
+      <div class="info-item"><label>网站地址</label><div class="value"><a href="https://starkstore.starkstore.duckdns.org" target="_blank" style="color:var(--neon)">https://198.23.209.22</a></div></div>
+      <div class="info-item"><label>SSH 端口</label><div class="value">22</div></div>
+      <div class="info-item"><label>系统</label><div class="value">Ubuntu 24.04 LTS</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📊 宝塔面板 - 服务器管理</h2>
+    <p>全功能服务器管理面板，包含文件管理、数据库、网站配置、安全设置等。</p>
+    <a href="https://198.23.209.22:17199/admin" target="_blank" class="btn btn-primary">打开宝塔面板</a>
+    <p style="margin-top:12px;font-size:.85rem">
+      用户名: <code>pin1dj3n</code> &nbsp;|&nbsp; 密码: <code>StarkAdmin2025!</code>
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>📦 桌面应用下载</h2>
+    <p>将管理面板包装为原生桌面应用，一键启动管理后台。</p>
+
+    <div class="platform-tabs" id="tabs">
+      <button class="platform-tab active" onclick="switchTab('windows')">Windows</button>
+      <button class="platform-tab" onclick="switchTab('macos')">macOS</button>
+      <button class="platform-tab" onclick="switchTab('linux')">Linux</button>
+    </div>
+
+    <div id="windows" class="platform-content active">
+      <h3 style="color:var(--neon);margin-bottom:8px">🪟 Windows</h3>
+      <p>下载批处理文件，双击即可启动管理面板（以独立应用窗口运行）。</p>
+      <a href="download/start-bt-panel.bat" download class="btn">📥 下载 start-bt-panel.bat</a>
+      <p style="margin-top:8px;font-size:.85rem;color:#4a8a40">
+        使用 Edge/Chrome 的 App Mode 模式，菜单栏隐藏，如原生应用。
+      </p>
+    </div>
+
+    <div id="macos" class="platform-content">
+      <h3 style="color:var(--neon);margin-bottom:8px">🍎 macOS</h3>
+      <p>下载 command 文件，终端运行或双击即可。</p>
+      <a href="download/start-bt-panel.command" download class="btn">📥 下载 start-bt-panel.command</a>
+      <p style="margin-top:8px;font-size:.85rem;color:#4a8a40">
+        下载后在终端执行: <code>chmod +x start-bt-panel.command && ./start-bt-panel.command</code>
+      </p>
+    </div>
+
+    <div id="linux" class="platform-content">
+      <h3 style="color:var(--neon);margin-bottom:8px">🐧 Linux</h3>
+      <p>选择以下方式之一：</p>
+      <a href="download/start-bt-panel.sh" download class="btn">📥 下载 Shell 脚本</a>
+      <a href="download/stark-admin.desktop" download class="btn">📥 下载 .desktop 快捷方式</a>
+      <p style="margin-top:8px;font-size:.85rem;color:#4a8a40">
+        .desktop 文件放入 <code>~/.local/share/applications/</code> 即可从应用菜单启动。
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🔧 SSH 快速连接</h2>
+    <p>终端 / PowerShell 执行：</p>
+    <pre>ssh root@198.23.209.22 -p 22</pre>
+    <p>密码: <code>StarkAdmin2025!</code></p>
+  </div>
+
+  <div class="card">
+    <h2>🌐 SolusVM (NerdVM) 控制台</h2>
+    <p>VPS 硬件级管理：重启、救援模式、重装系统等。</p>
+    <a href="https://nerdvm.racknerd.com/" target="_blank" class="btn">打开 SolusVM</a>
+    <p style="margin-top:8px;font-size:.85rem">
+      用户名: <code>vmuser331468</code> &nbsp;|&nbsp; 密码: <code>StarkAdmin2025!</code>
+    </p>
+  </div>
+</div>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.platform-content').forEach(el => el.classList.remove('active'));
+  document.getElementById(tab).classList.add('active');
+  document.querySelectorAll('.platform-tab').forEach(el => el.classList.remove('active'));
+  document.querySelector('[onclick*="'+tab+'"]').classList.add('active');
+}
+</script>
+</body>
+</html>

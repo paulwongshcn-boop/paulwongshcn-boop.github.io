@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=斯塔克工业商店 - 后台管理
+Comment=RackNerd VPS 管理面板
+Exec=xdg-open https://starkstore.starkstore.duckdns.org:17199/admin
+Icon=applications-system
+Terminal=false
+Type=Application
+Categories=Network;Admin;

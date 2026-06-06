@@ -1,36 +1,701 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My GitHub Pages</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        .card {
-            text-align: center;
-            padding: 3rem;
-            background: rgba(255,255,255,0.15);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-        }
-        h1 { font-size: 2.5rem; margin-bottom: 1rem; }
-        p { font-size: 1.1rem; opacity: 0.9; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>STARKVERSE — MCU Timeline Command Center</title>
+<meta name="description" content="STARKVERSE: The ultimate MCU timeline — every film and series in chronological order.">
+<script src="/assets/vue.global.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--neon:#39ff14;--n2:#00ff88;--bg:#050a03;--bg2:#0a1408;--card:rgba(5,10,3,0.92);--bdr:rgba(57,255,20,0.15);--bdr2:rgba(57,255,20,0.35);--txt:#ccffc0;--dim:#4a8a40;--p1:#ff6b6b;--p2:#ffd93d;--p3:#6bcbff;--p4:#c084fc;--p5:#fb923c;--p6:#f472b6;--gem-purple:#a855f7;--gem-blue:#3b82f6;--gem-red:#ef4444;--gem-yellow:#eab308;--gem-orange:#f97316;--gem-green:#22c55e;--hex-bg:radial-gradient(ellipse at center,transparent 0%,rgba(57,255,20,0.02) 100%)}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI','Poppins',Arial,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden}
+::selection{background:var(--neon);color:#000}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--neon);border-radius:3px}
+
+/* scanlines */
+body::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(57,255,20,0.03) 2px,rgba(57,255,20,0.03) 4px)}
+
+/* particles bg */
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+#particles span{position:absolute;width:2px;height:2px;background:var(--neon);border-radius:50%;animation:drift linear infinite;opacity:0}
+@keyframes drift{0%{opacity:0;transform:translateY(0) translateX(0)}10%{opacity:0.6}90%{opacity:0.3}100%{opacity:0;transform:translateY(-100vh) translateX(30px)}}
+#particles span:nth-child(1){left:10%;animation-duration:14s;animation-delay:0s}
+#particles span:nth-child(2){left:25%;animation-duration:18s;animation-delay:2s;width:3px;height:3px}
+#particles span:nth-child(3){left:40%;animation-duration:12s;animation-delay:4s}
+#particles span:nth-child(4){left:55%;animation-duration:20s;animation-delay:1s;width:1px;height:1px}
+#particles span:nth-child(5){left:70%;animation-duration:16s;animation-delay:3s}
+#particles span:nth-child(6){left:85%;animation-duration:15s;animation-delay:5s;width:3px;height:3px}
+#particles span:nth-child(7){left:50%;animation-duration:22s;animation-delay:7s}
+#particles span:nth-child(8){left:15%;animation-duration:13s;animation-delay:6s;width:2px;height:2px}
+#particles span:nth-child(9){left:75%;animation-duration:19s;animation-delay:0s;width:1px;height:1px}
+#particles span:nth-child(10){left:92%;animation-duration:17s;animation-delay:8s}
+
+/* glitch text */
+@keyframes glitch{0%{text-shadow:-2px 0 #ff0080,2px 0 #00ffcc}25%{text-shadow:2px 0 #ff0080,-2px 0 #00ffcc}50%{text-shadow:-1px 0 #ff0080,1px 0 #00ffcc}75%{text-shadow:1px 0 #ff0080,-1px 0 #00ffcc}100%{text-shadow:-2px 0 #ff0080,2px 0 #00ffcc}}
+
+/* pulse glow */
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 5px var(--neon),0 0 10px rgba(57,255,20,0.3)}50%{box-shadow:0 0 15px var(--neon),0 0 30px rgba(57,255,20,0.5)}}
+@keyframes textGlow{0%,100%{text-shadow:0 0 5px var(--neon),0 0 10px rgba(57,255,20,0.3)}50%{text-shadow:0 0 10px var(--neon),0 0 20px rgba(57,255,20,0.5)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideInR{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+
+/* ============ HUD KEYFRAMES ============ */
+@keyframes scanLine{0%{top:-100%}100%{top:200%}}
+@keyframes pulseCorner{0%,100%{opacity:1}50%{opacity:0.2}}
+@keyframes dataFlow{0%{background-position:0 0}100%{background-position:200% 0}}
+@keyframes ripple{0%{box-shadow:0 0 0 0 rgba(57,255,20,0.6)}100%{box-shadow:0 0 0 40px transparent}}
+@keyframes hexFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+
+.app{position:relative;z-index:1;min-height:100vh}
+
+/* ============ HERO / DASHBOARD ============ */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;position:relative;overflow:hidden}
+
+/* hero background poster */
+.hero-bg{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;animation:heroBreathe 8s ease-in-out infinite}
+@keyframes heroBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.hero-overlay{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(5,10,3,0.75) 0%,rgba(5,10,3,0.65) 50%,rgba(5,10,3,0.85) 100%)}
+
+/* hero info card */
+.hero-info{position:absolute;z-index:2;bottom:80px;left:30px;padding:16px 24px;border:1px solid rgba(57,255,20,0.3);border-radius:12px;background:rgba(5,10,3,0.7);backdrop-filter:blur(6px);max-width:340px;animation:fadeUp 0.6s both}
+.hero-info .label{font-size:0.65rem;letter-spacing:4px;color:var(--neon);font-weight:700;margin-bottom:6px}
+.hero-info .label span{display:inline-block;animation:textGlow 2s infinite}
+.hero-info .movie-title{font-size:clamp(1rem,2vw,1.3rem);font-weight:700;color:#fff;text-shadow:0 0 8px rgba(57,255,20,0.6),0 0 16px rgba(57,255,20,0.3);letter-spacing:1px}
+.hero-info .movie-date{font-size:0.75rem;color:var(--dim);margin-top:4px;letter-spacing:1px}
+.hero-info .movie-date strong{color:var(--neon)}
+
+/* dashboard cards stay on top */
+.hero .stones,.hero .hero-title,.hero .dashboard,.hero .scroll-hint{position:relative;z-index:2}
+
+/* ============ SCI-FI HUD DASHBOARD ============ */
+.dashboard{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:780px;width:100%;padding:20px 0}
+
+.dash-card{position:relative;padding:20px 16px;border:1px solid rgba(57,255,20,0.12);border-radius:16px;background:rgba(5,10,3,0.6);backdrop-filter:blur(4px);cursor:pointer;overflow:hidden;text-align:center;transition:all 0.35s cubic-bezier(0.4,0,0.2,1);min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.dash-card::before{content:'';position:absolute;inset:0;border-radius:16px;padding:2px;background:linear-gradient(135deg,transparent 20%,rgba(57,255,20,0.15) 50%,transparent 80%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:0.6;transition:opacity 0.35s}
+.dash-card::after{content:'';position:absolute;inset:-1px;border-radius:17px;background:transparent;transition:all 0.5s;opacity:0;z-index:-1;filter:blur(8px)}
+.dash-card:hover::before{opacity:1}
+.dash-card:hover{transform:translateY(-4px);border-color:rgba(57,255,20,0.3)}
+.dash-card:active{animation:ripple 0.5s ease-out}
+
+/* Hex grid background */
+.dash-card .dash-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;width:100%}
+.dash-card .dash-inner::before{content:'';position:absolute;top:-40px;left:-40px;right:-40px;bottom:-40px;background:var(--hex-bg);background-image:
+  repeating-linear-gradient(60deg,transparent,transparent 10px,rgba(57,255,20,0.015) 10px,rgba(57,255,20,0.015) 11px),
+  repeating-linear-gradient(-60deg,transparent,transparent 10px,rgba(57,255,20,0.015) 10px,rgba(57,255,20,0.015) 11px);background-size:20px 34px;pointer-events:none;opacity:0.3;z-index:-1;border-radius:12px}
+
+/* Corner indicators */
+.dash-card .corner-lt,.dash-card .corner-rt,.dash-card .corner-lb,.dash-card .corner-rb{position:absolute;width:12px;height:12px;z-index:3;pointer-events:none}
+.dash-card .corner-lt{top:6px;left:6px;border-top:2px solid;border-left:2px solid;border-color:rgba(57,255,20,0.35);animation:pulseCorner 2s ease-in-out infinite}
+.dash-card .corner-rt{top:6px;right:6px;border-top:2px solid;border-right:2px solid;border-color:rgba(57,255,20,0.35);animation:pulseCorner 2s ease-in-out infinite 0.5s}
+.dash-card .corner-lb{bottom:6px;left:6px;border-bottom:2px solid;border-left:2px solid;border-color:rgba(57,255,20,0.35);animation:pulseCorner 2s ease-in-out infinite 1s}
+.dash-card .corner-rb{bottom:6px;right:6px;border-bottom:2px solid;border-right:2px solid;border-color:rgba(57,255,20,0.35);animation:pulseCorner 2s ease-in-out infinite 1.5s}
+
+/* Scanline overlay */
+.dash-card .scanline{position:absolute;left:0;width:100%;height:100%;background:linear-gradient(to bottom,transparent 0%,rgba(57,255,20,0.04) 50%,transparent 100%);pointer-events:none;z-index:4;opacity:0;transition:opacity 0.4s}
+.dash-card:hover .scanline{opacity:1;animation:scanLine 1.2s linear infinite}
+
+/* Icon */
+.dash-card .icon{font-size:clamp(1.6rem,3vw,2.2rem);margin-bottom:6px;filter:drop-shadow(0 0 4px rgba(57,255,20,0.2));transition:all 0.3s}
+.dash-card:hover .icon{transform:scale(1.15)}
+.dash-card .label{font-size:clamp(0.7rem,1.2vw,0.85rem);font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fff;padding:3px 0;transition:all 0.3s}
+.dash-card .meta{font-size:clamp(0.55rem,0.9vw,0.65rem);color:var(--dim);letter-spacing:1px;margin-top:2px}
+
+/* Status indicator & text */
+.dash-card .status-indicator{width:6px;height:6px;border-radius:50%;background:var(--neon);margin-top:8px;box-shadow:0 0 6px var(--neon);animation:pulseCorner 1.5s ease-in-out infinite;opacity:0.3;transition:all 0.4s}
+.dash-card:hover .status-indicator{opacity:1;box-shadow:0 0 10px var(--neon)}
+.dash-card .status-text{font-size:0.5rem;letter-spacing:2px;color:var(--dim);margin-top:4px;opacity:0;transition:all 0.4s;text-transform:uppercase}
+.dash-card:hover .status-text{opacity:1;color:var(--neon)}
+
+/* Active state */
+.dash-card.active{border-color:var(--neon);box-shadow:inset 0 0 20px rgba(57,255,20,0.08),0 0 25px rgba(57,255,20,0.15)}
+
+/* ============ GEMSTONE COLOR VARIATIONS ============ */
+/* MOVIES — Purple (Power Stone) */
+.dash-card.movies{--gem:var(--gem-purple);--gem-rgb:168,85,247}
+.dash-card.movies .corner-lt,.dash-card.movies .corner-rt,.dash-card.movies .corner-lb,.dash-card.movies .corner-rb{border-color:var(--gem)}
+.dash-card.movies::after{background:radial-gradient(circle at center,var(--gem),transparent 70%)}
+.dash-card.movies:hover{box-shadow:0 0 15px rgba(168,85,247,0.3),inset 0 0 15px rgba(168,85,247,0.08);border-color:rgba(168,85,247,0.4)}
+.dash-card.movies:hover .label{color:var(--gem);text-shadow:0 0 8px rgba(168,85,247,0.5)}
+.dash-card.movies:hover .icon{filter:drop-shadow(0 0 6px var(--gem))}
+.dash-card.movies.active{border-color:var(--gem);box-shadow:inset 0 0 20px rgba(168,85,247,0.12),0 0 25px rgba(168,85,247,0.2)}
+.dash-card.movies .status-indicator{background:var(--gem);box-shadow:0 0 6px var(--gem)}
+.dash-card.movies .scanline{background:linear-gradient(to bottom,transparent 0%,rgba(168,85,247,0.06) 50%,transparent 100%)}
+
+/* SERIES — Blue (Space Stone — Tesseract) */
+.dash-card.series{--gem:var(--gem-blue);--gem-rgb:59,130,246}
+.dash-card.series .corner-lt,.dash-card.series .corner-rt,.dash-card.series .corner-lb,.dash-card.series .corner-rb{border-color:var(--gem)}
+.dash-card.series::after{background:radial-gradient(circle at center,var(--gem),transparent 70%)}
+.dash-card.series:hover{box-shadow:0 0 15px rgba(59,130,246,0.3),inset 0 0 15px rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.4)}
+.dash-card.series:hover .label{color:var(--gem);text-shadow:0 0 8px rgba(59,130,246,0.5)}
+.dash-card.series:hover .icon{filter:drop-shadow(0 0 6px var(--gem))}
+.dash-card.series.active{border-color:var(--gem);box-shadow:inset 0 0 20px rgba(59,130,246,0.12),0 0 25px rgba(59,130,246,0.2)}
+.dash-card.series .status-indicator{background:var(--gem);box-shadow:0 0 6px var(--gem)}
+.dash-card.series .scanline{background:linear-gradient(to bottom,transparent 0%,rgba(59,130,246,0.06) 50%,transparent 100%)}
+
+/* PHASES — Red (Reality Stone — Aether) */
+.dash-card.phases{--gem:var(--gem-red);--gem-rgb:239,68,68}
+.dash-card.phases .corner-lt,.dash-card.phases .corner-rt,.dash-card.phases .corner-lb,.dash-card.phases .corner-rb{border-color:var(--gem)}
+.dash-card.phases::after{background:radial-gradient(circle at center,var(--gem),transparent 70%)}
+.dash-card.phases:hover{box-shadow:0 0 15px rgba(239,68,68,0.3),inset 0 0 15px rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.4)}
+.dash-card.phases:hover .label{color:var(--gem);text-shadow:0 0 8px rgba(239,68,68,0.5)}
+.dash-card.phases:hover .icon{filter:drop-shadow(0 0 6px var(--gem))}
+.dash-card.phases.active{border-color:var(--gem);box-shadow:inset 0 0 20px rgba(239,68,68,0.12),0 0 25px rgba(239,68,68,0.2)}
+.dash-card.phases .status-indicator{background:var(--gem);box-shadow:0 0 6px var(--gem)}
+.dash-card.phases .scanline{background:linear-gradient(to bottom,transparent 0%,rgba(239,68,68,0.06) 50%,transparent 100%)}
+
+/* SEARCH — Yellow (Mind Stone) */
+.dash-card.search{--gem:var(--gem-yellow);--gem-rgb:234,179,8}
+.dash-card.search .corner-lt,.dash-card.search .corner-rt,.dash-card.search .corner-lb,.dash-card.search .corner-rb{border-color:var(--gem)}
+.dash-card.search::after{background:radial-gradient(circle at center,var(--gem),transparent 70%)}
+.dash-card.search:hover{box-shadow:0 0 15px rgba(234,179,8,0.3),inset 0 0 15px rgba(234,179,8,0.08);border-color:rgba(234,179,8,0.4)}
+.dash-card.search:hover .label{color:var(--gem);text-shadow:0 0 8px rgba(234,179,8,0.5)}
+.dash-card.search:hover .icon{filter:drop-shadow(0 0 6px var(--gem))}
+.dash-card.search.active{border-color:var(--gem);box-shadow:inset 0 0 20px rgba(234,179,8,0.12),0 0 25px rgba(234,179,8,0.2)}
+.dash-card.search .status-indicator{background:var(--gem);box-shadow:0 0 6px var(--gem)}
+.dash-card.search .scanline{background:linear-gradient(to bottom,transparent 0%,rgba(234,179,8,0.06) 50%,transparent 100%)}
+
+/* RANK — Orange (Soul Stone) */
+.dash-card.rank{--gem:var(--gem-orange);--gem-rgb:249,115,22}
+.dash-card.rank .corner-lt,.dash-card.rank .corner-rt,.dash-card.rank .corner-lb,.dash-card.rank .corner-rb{border-color:var(--gem)}
+.dash-card.rank::after{background:radial-gradient(circle at center,var(--gem),transparent 70%)}
+.dash-card.rank:hover{box-shadow:0 0 15px rgba(249,115,22,0.3),inset 0 0 15px rgba(249,115,22,0.08);border-color:rgba(249,115,22,0.4)}
+.dash-card.rank:hover .label{color:var(--gem);text-shadow:0 0 8px rgba(249,115,22,0.5)}
+.dash-card.rank:hover .icon{filter:drop-shadow(0 0 6px var(--gem))}
+.dash-card.rank.active{border-color:var(--gem);box-shadow:inset 0 0 20px rgba(249,115,22,0.12),0 0 25px rgba(249,115,22,0.2)}
+.dash-card.rank .status-indicator{background:var(--gem);box-shadow:0 0 6px var(--gem)}
+.dash-card.rank .scanline{background:linear-gradient(to bottom,transparent 0%,rgba(249,115,22,0.06) 50%,transparent 100%)}
+
+/* ABOUT — Green (Time Stone) */
+.dash-card.about{--gem:var(--gem-green);--gem-rgb:34,197,94}
+.dash-card.about .corner-lt,.dash-card.about .corner-rt,.dash-card.about .corner-lb,.dash-card.about .corner-rb{border-color:var(--gem)}
+.dash-card.about::after{background:radial-gradient(circle at center,var(--gem),transparent 70%)}
+.dash-card.about:hover{box-shadow:0 0 15px rgba(34,197,94,0.3),inset 0 0 15px rgba(34,197,94,0.08);border-color:rgba(34,197,94,0.4)}
+.dash-card.about:hover .label{color:var(--gem);text-shadow:0 0 8px rgba(34,197,94,0.5)}
+.dash-card.about:hover .icon{filter:drop-shadow(0 0 6px var(--gem))}
+.dash-card.about.active{border-color:var(--gem);box-shadow:inset 0 0 20px rgba(34,197,94,0.12),0 0 25px rgba(34,197,94,0.2)}
+.dash-card.about .status-indicator{background:var(--gem);box-shadow:0 0 6px var(--gem)}
+.dash-card.about .scanline{background:linear-gradient(to bottom,transparent 0%,rgba(34,197,94,0.06) 50%,transparent 100%)}
+
+.app{position:relative;z-index:1;min-height:100vh}
+
+/* ============ SEARCH MODAL ============ */
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);z-index:100;display:flex;justify-content:center;align-items:flex-start;padding-top:10vh;animation:fadeUp 0.3s}
+.modal-box{background:var(--bg2);border:1px solid var(--bdr2);border-radius:16px;padding:24px;width:90%;max-width:560px;max-height:70vh;overflow-y:auto;animation:slideIn 0.3s}
+.modal-box input{width:100%;padding:12px 16px;background:rgba(57,255,20,0.05);border:1px solid var(--bdr);border-radius:10px;color:var(--txt);font-size:1rem;outline:none;transition:border-color 0.3s}
+.modal-box input:focus{border-color:var(--neon);box-shadow:0 0 10px rgba(57,255,20,0.15)}
+.modal-box .close-btn{float:right;background:none;border:1px solid var(--bdr);color:var(--dim);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1.1rem;transition:all 0.3s}
+.modal-box .close-btn:hover{color:var(--neon);border-color:var(--neon)}
+.search-result{padding:10px 12px;margin:6px 0;background:var(--card);border:1px solid var(--bdr);border-radius:8px;cursor:pointer;transition:all 0.2s}
+.search-result:hover{border-color:var(--neon);background:rgba(57,255,20,0.05)}
+.search-result .s-year{color:var(--neon);font-weight:700;margin-right:8px}
+.search-result .s-type{font-size:0.7rem;padding:1px 6px;border-radius:4px;margin-left:6px}
+.search-result .s-type.movie{background:rgba(57,255,20,0.15);color:var(--neon)}
+.search-result .s-type.series{background:rgba(192,132,252,0.2);color:#c084fc}
+
+.rank-badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:#ffd93d;color:#000;border-radius:50%;font-size:0.7rem;font-weight:700;margin-right:8px;flex-shrink:0}
+.rank-badge.gold{background:#ffd93d}
+.rank-badge.silver{background:#c0c0c0;color:#000}
+.rank-badge.bronze{background:#cd7f32;color:#fff}
+
+/* ============ TIMELINE ============ */
+.timeline-section{padding:40px 20px 80px;max-width:1100px;margin:0 auto}
+.timeline-header{text-align:center;margin-bottom:40px}
+.timeline-header h2{font-size:clamp(1.2rem,2.8vw,2rem);color:var(--neon);letter-spacing:4px;text-transform:uppercase}
+.timeline-header p{color:var(--dim);font-size:0.8rem;margin-top:6px}
+
+.filter-bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:30px}
+.filter-btn{padding:6px 16px;background:var(--card);border:1px solid var(--bdr);border-radius:20px;color:var(--dim);cursor:pointer;font-size:0.75rem;transition:all 0.3s;letter-spacing:1px}
+.filter-btn:hover,.filter-btn.active{border-color:var(--neon);color:var(--neon);box-shadow:0 0 8px rgba(57,255,20,0.1)}
+.filter-btn.active{background:rgba(57,255,20,0.1)}
+
+/* hero filter buttons */
+.hero-bar{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:-10px 0 20px;padding:0 10px}
+.hero-btn{padding:4px 12px;background:transparent;border:1px solid rgba(57,255,20,0.08);border-radius:14px;color:var(--dim);cursor:pointer;font-size:0.65rem;transition:all 0.3s;letter-spacing:0.5px;white-space:nowrap}
+.hero-btn:hover{border-color:rgba(57,255,20,0.3);color:var(--txt)}
+.hero-btn.active{background:rgba(57,255,20,0.08);border-color:var(--neon);color:var(--neon)}
+
+/* timeline vertical */
+.tl{position:relative;padding:0}
+.tl::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,transparent,var(--neon),var(--neon),transparent);transform:translateX(-50%)}
+
+.tl-item{display:flex;align-items:flex-start;margin-bottom:30px;position:relative;animation:fadeUp 0.5s both}
+.tl-item:nth-child(odd){flex-direction:row}
+.tl-item:nth-child(even){flex-direction:row-reverse}
+
+.tl-card{width:44%;background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:16px;transition:all 0.35s;position:relative;cursor:default}
+.tl-card:hover{border-color:var(--neon);box-shadow:0 0 18px rgba(57,255,20,0.12);transform:translateY(-3px)}
+
+.tl-dot{position:absolute;left:50%;top:20px;width:14px;height:14px;background:var(--bg);border:2px solid var(--neon);border-radius:50%;transform:translateX(-50%);z-index:2;animation:pulseGlow 3s infinite}
+.tl-item:nth-child(odd) .tl-card{margin-right:6%}
+.tl-item:nth-child(even) .tl-card{margin-left:6%}
+
+.tl-card .year{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:900;color:var(--neon);opacity:0.5;line-height:1;margin-bottom:4px;animation:textGlow 4s infinite}
+.tl-card .title{font-size:clamp(0.85rem,1.6vw,1.05rem);font-weight:700;margin-bottom:4px;line-height:1.3}
+.tl-card .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.tl-card .tag{font-size:0.6rem;padding:2px 8px;border-radius:10px;letter-spacing:1px;font-weight:600}
+
+.tag-movie{background:rgba(57,255,20,0.12);color:var(--neon);border:1px solid rgba(57,255,20,0.2)}
+.tag-series{background:rgba(192,132,252,0.15);color:#c084fc;border:1px solid rgba(192,132,252,0.2)}
+
+/* phase colors for tags */
+.tag-p1{background:rgba(255,107,107,0.12);color:#ff6b6b;border:1px solid rgba(255,107,107,0.2)}
+.tag-p2{background:rgba(255,217,61,0.12);color:#ffd93d;border:1px solid rgba(255,217,61,0.2)}
+.tag-p3{background:rgba(107,203,255,0.12);color:#6bcbff;border:1px solid rgba(107,203,255,0.2)}
+.tag-p4{background:rgba(192,132,252,0.12);color:#c084fc;border:1px solid rgba(192,132,252,0.2)}
+.tag-p5{background:rgba(251,146,60,0.12);color:#fb923c;border:1px solid rgba(251,146,60,0.2)}
+.tag-p6{background:rgba(244,114,182,0.12);color:#f472b6;border:1px solid rgba(244,114,182,0.2)}
+
+.tl-card .desc{font-size:clamp(0.65rem,1.1vw,0.75rem);color:var(--dim);margin-bottom:6px;line-height:1.4}
+.tl-card .rating{display:flex;align-items:center;gap:4px;font-size:0.7rem}
+.tl-card .stars{color:#ffd93d;letter-spacing:1px}
+.tl-card .rating-val{color:var(--dim);font-size:0.65rem}
+
+/* phase banner */
+.phase-banner{text-align:center;padding:20px 0;margin:10px 0;position:relative}
+.phase-banner::before,.phase-banner::after{content:'';position:absolute;top:50%;height:1px;width:30%;background:linear-gradient(to right,transparent,var(--neon))}
+.phase-banner::before{left:0}
+.phase-banner::after{right:0;background:linear-gradient(to left,transparent,var(--neon))}
+.phase-banner span{color:var(--neon);font-size:clamp(0.8rem,1.5vw,1.1rem);letter-spacing:6px;text-transform:uppercase;opacity:0.6}
+.phase-storyline{font-size:clamp(0.55rem,1vw,0.7rem);color:var(--dim);letter-spacing:3px;margin-top:4px;opacity:0.5;font-family:monospace}
+
+/* about modal */
+.about-content{padding:16px;color:var(--dim);font-size:0.85rem;line-height:1.7}
+.about-content h3{color:var(--neon);margin-bottom:8px}
+
+/* poster placeholders */
+
+/* gauntlet */
+.gauntlet{position:fixed;bottom:20px;right:20px;font-size:1.6rem;opacity:0.25;z-index:10;animation:pulseGlow 6s infinite;pointer-events:none}
+
+/* responsive */
+@media(max-width:768px){
+.dashboard{grid-template-columns:repeat(3,1fr);gap:12px;max-width:450px;padding:12px 0}
+.dash-card{padding:14px 10px;min-height:100px}
+.dash-card .label{font-size:0.65rem}
+.dash-card .meta{font-size:0.55rem}
+.dash-card .icon{font-size:1.4rem}
+.dash-card .status-text{display:none}
+.tl::before{left:20px}
+.tl-item{flex-direction:row!important}
+.tl-item:nth-child(odd) .tl-card,.tl-item:nth-child(even) .tl-card{margin:0 0 0 40px;width:calc(100% - 40px)}
+.tl-dot{left:20px;transform:translateX(-50%)}
+.hero-title .sub{font-size:0.6rem;letter-spacing:3px}
+.hero-info{bottom:70px;left:16px;right:16px;max-width:none;padding:12px 16px}
+}
+@media(max-width:480px){
+.dashboard{grid-template-columns:repeat(2,1fr);gap:10px;max-width:340px;padding:8px 0}
+.dash-card{padding:12px 8px;min-height:88px}
+.dash-card .label{font-size:0.6rem;letter-spacing:1px}
+.dash-card .icon{font-size:1.2rem;margin-bottom:4px}
+.dash-card .meta{font-size:0.5rem}
+.dash-card .status-indicator{width:4px;height:4px;margin-top:4px}
+.dash-card .status-text{display:none}
+.dash-card .corner-lt,.dash-card .corner-rt,.dash-card .corner-lb,.dash-card .corner-rb{width:8px;height:8px}
+}
+
+/* poster card styles */
+.tl-card{position:relative;overflow:hidden}
+.tl-card-poster{position:absolute;top:0;right:0;width:60%;height:100%;object-fit:cover;z-index:0;pointer-events:none}
+.tl-card-overlay{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;
+  background:linear-gradient(to right, rgba(5,10,3,0.97) 0%, rgba(5,10,3,0.97) 35%, rgba(5,10,3,0.7) 50%, rgba(5,10,3,0.3) 100%)}
+@media(max-width:768px){
+  .tl-card-poster{width:100%;height:100%;right:auto}
+  .tl-card-overlay{background:linear-gradient(to bottom, rgba(5,10,3,0.2) 0%, rgba(5,10,3,0.97) 60%, rgba(5,10,3,0.97) 100%)}
+}
+.tl-card-fallback{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.tl-card-fallback::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.03) 2px,rgba(255,255,255,0.03) 4px)}
+.tl-card .year,.tl-card .title,.tl-card .tags,.tl-card .desc,.tl-card .rating{position:relative;z-index:2}
+
+
+.shop-float{position:fixed;top:16px;right:16px;z-index:9998;width:44px;height:44px;border-radius:50%;background:rgba(5,10,3,0.85);border:1px solid rgba(57,255,20,0.3);display:flex;align-items:center;justify-content:center;font-size:1.3rem;text-decoration:none;transition:all 0.3s;backdrop-filter:blur(4px);box-shadow:0 0 12px rgba(57,255,20,0.1)}
+.shop-float:hover{border-color:var(--neon);transform:scale(1.1);box-shadow:0 0 20px rgba(57,255,20,0.25)}
+.shop-float::after{content:"SHOP";position:absolute;top:50%;right:54px;transform:translateY(-50%);font-size:0.6rem;letter-spacing:2px;color:var(--neon);opacity:0;transition:all 0.3s;white-space:nowrap;font-family:monospace}
+.shop-float:hover::after{opacity:1;right:58px}
+</style>
 </head>
 <body>
-    <div class="card">
-        <h1>🚀 Hello, GitHub Pages!</h1>
-        <p>This site is hosted on GitHub Pages.</p>
+<div id="loading-screen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#050a03;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;color:#39ff14;font-family:monospace">
+  <div style="font-size:3rem;margin-bottom:20px">⚡</div>
+  <div style="font-size:1.2rem;letter-spacing:3px;animation:pulseGlow 1.5s infinite">LOADING STARKVERSE...</div>
+  <div style="margin-top:20px;width:120px;height:3px;background:#0a1408;border-radius:2px;overflow:hidden">
+    <div style="width:30%;height:100%;background:#39ff14;border-radius:2px;animation:loadingBar 1.2s ease-in-out infinite"></div>
+  </div>
+  <style>@keyframes loadingBar{0%{width:0%;margin-left:0}50%{width:60%;margin-left:40%}100%{width:0%;margin-left:100%}}
+.shop-float{position:fixed;top:16px;right:16px;z-index:9998;width:44px;height:44px;border-radius:50%;background:rgba(5,10,3,0.85);border:1px solid rgba(57,255,20,0.3);display:flex;align-items:center;justify-content:center;font-size:1.3rem;text-decoration:none;transition:all 0.3s;backdrop-filter:blur(4px);box-shadow:0 0 12px rgba(57,255,20,0.1)}
+.shop-float:hover{border-color:var(--neon);transform:scale(1.1);box-shadow:0 0 20px rgba(57,255,20,0.25)}
+.shop-float::after{content:"SHOP";position:absolute;top:50%;right:54px;transform:translateY(-50%);font-size:0.6rem;letter-spacing:2px;color:var(--neon);opacity:0;transition:all 0.3s;white-space:nowrap;font-family:monospace}
+.shop-float:hover::after{opacity:1;right:58px}
+</style>
+</div>
+<div id="app">
+  <div class="app">
+    <!-- particles -->
+    <div id="particles"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+
+    <!-- gauntlet -->
+    <div class="gauntlet">🦾</div>
+
+    <!-- HERO -->
+    <div class="hero" id="hero">
+      <!-- hero background poster -->
+      <img v-if="heroPoster" :src="heroPoster" alt="" class="hero-bg" @error="$event.target.style.display='none'">
+      <div class="hero-overlay"></div>
+
+      <div class="stones">
+        <span class="stone"></span><span class="stone"></span><span class="stone"></span>
+        <span class="stone"></span><span class="stone"></span><span class="stone"></span>
+      </div>
+      <div class="hero-title">
+        <span class="main">⚡ STARKVERSE</span>
+        <span class="sub">MCU Timeline Command Center</span>
+      </div>
+      <div class="dashboard">
+        <div class="dash-card" v-for="btn in dashboard" :key="btn.id" @click="handleDash(btn.id)" :class="[btn.id, {active:activeFilter===btn.id && btn.id!=='about' && btn.id!=='search'}]">
+          <span class="corner-lt"></span>
+          <span class="corner-rt"></span>
+          <span class="corner-lb"></span>
+          <span class="corner-rb"></span>
+          <div class="dash-inner">
+            <span class="icon">{{ btn.icon }}</span>
+            <div class="label">{{ btn.label }}</div>
+            <div class="meta">{{ btn.meta }}</div>
+            <span class="status-indicator"></span>
+            <span class="status-text">SYSTEM ONLINE</span>
+          </div>
+          <div class="scanline"></div>
+        </div>
+      </div>
+      <!-- latest movie info card -->
+      <div class="hero-info" v-if="heroInfo">
+        <div class="label"><span>✦ LATEST RELEASE ✦</span></div>
+        <div class="movie-title">{{ heroInfo.title }}</div>
+        <div class="movie-date">Released: <strong>{{ heroInfo.releaseDisplay }}</strong></div>
+      </div>
+      <div class="scroll-hint" @click="scrollToTimeline">▼ SCROLL FOR TIMELINE ▼</div>
     </div>
+
+    <!-- SEARCH MODAL -->
+    <div class="modal-overlay" v-if="showSearch" @click.self="showSearch=false">
+      <div class="modal-box">
+        <button class="close-btn" @click="showSearch=false">✕</button>
+        <h3 style="color:var(--neon);margin-bottom:12px;font-size:1rem">🔍 SEARCH MCU DATABASE</h3>
+        <input v-model="searchQuery" placeholder="Type to search movies & series..." @keyup.esc="showSearch=false" autofocus>
+        <div style="margin-top:12px" v-if="searchResults.length">
+          <div class="search-result" v-for="(item,i) in searchResults" :key="i" @click="scrollToItem(item)">
+            <span class="s-year">{{ item.year }}</span>
+            <strong>{{ item.title }}</strong>
+            <span class="s-type" :class="item.type==='movie'?'movie':'series'">{{ item.type==='movie'?'🎬 Movie':'📺 Series' }}</span>
+            <span class="rating-val" style="float:right">⭐ {{ item.rating||'—' }}</span>
+          </div>
+        </div>
+        <div v-else-if="searchQuery && !searchResults.length" style="color:var(--dim);margin-top:12px;text-align:center">No results found.</div>
+      </div>
+    </div>
+
+    <!-- ABOUT MODAL -->
+    <div class="modal-overlay" v-if="showAbout" @click.self="showAbout=false">
+      <div class="modal-box">
+        <button class="close-btn" @click="showAbout=false">✕</button>
+        <div class="about-content">
+          <h3>⚡ ABOUT STARKVERSE</h3>
+          <p>Welcome to the STARKVERSE — your ultimate command center for the Marvel Cinematic Universe timeline.</p>
+          <br>
+          <p>This timeline organizes all MCU films and Disney+ series in <strong>chronological story order</strong>, not release order. Navigate by phase, filter by type, or search across the entire database.</p>
+          <br>
+          <p><strong>📊 Stats:</strong></p>
+          <p>• Films: <span style="color:var(--neon)">34 entries</span></p>
+          <p>• Series: <span style="color:var(--neon)">15 entries</span></p>
+          <p>• Phases: <span style="color:var(--neon)">1–6</span></p>
+          <br>
+          <p style="color:var(--dim);font-size:0.75rem">— "Part of the journey is the end." — Tony Stark</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RANK MODAL -->
+    <div class="modal-overlay" v-if="showRank" @click.self="showRank=false">
+      <div class="modal-box" style="max-height:80vh">
+        <button class="close-btn" @click="showRank=false">✕</button>
+        <h3 style="color:var(--neon);margin-bottom:16px;font-size:1rem">🏆 TOP 10 — IMDb RATINGS</h3>
+        <div class="search-result" v-for="(item,i) in top10" :key="i" style="display:flex;align-items:center">
+          <span class="rank-badge" :class="i===0?'gold':i===1?'silver':i===2?'bronze':''">{{ i+1 }}</span>
+          <div style="flex:1">
+            <span class="s-year">{{ item.year }}</span>
+            <strong>{{ item.title }}</strong>
+            <span class="s-type" :class="item.type==='movie'?'movie':'series'" style="margin-left:6px">{{ item.type==='movie'?'🎬':'📺' }}</span>
+          </div>
+          <span style="color:#ffd93d;font-weight:700;font-size:0.85rem">⭐ {{ item.rating }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="timeline-section" id="timeline">
+      <div class="timeline-header">
+        <h2>⏳ MCU CHRONOLOGICAL TIMELINE</h2>
+        <p>All 49 MCU entries in chronological order</p>
+      </div>
+      <div class="filter-bar">
+        <button class="filter-btn" :class="{active:activeFilter==='all'}" @click="activeFilter='all'">ALL</button>
+        <button class="filter-btn" :class="{active:activeFilter==='movies'}" @click="activeFilter='movies'">🎬 MOVIES</button>
+        <button class="filter-btn" :class="{active:activeFilter==='series'}" @click="activeFilter='series'">📺 SERIES</button>
+        <button class="filter-btn" v-for="p in phases" :key="p" :class="{active:activeFilter==='phase'+p}" @click="activeFilter='phase'+p">PHASE {{ p }}</button>
+      </div>
+      <div class="hero-bar" v-if="heroList.length">
+        <button class="hero-btn" :class="{active:selectedHero===''}" @click="selectedHero='';activeFilter='all'">ALL HEROES</button>
+        <button class="hero-btn" v-for="h in heroList" :key="h" :class="{active:selectedHero===h}" @click="selectedHero=h;activeFilter='all'">{{ h }}</button>
+      </div>
+      <div class="tl">
+        <div v-for="(item,i) in filteredList" :key="item.id">
+          <!-- phase divider -->
+          <div class="phase-banner" v-if="showPhaseDivider(i)">
+            <span>⚡ PHASE {{ item.phase }} ⚡</span>
+            <div class="phase-storyline">{{ phaseStorylines[item.phase-1] }}</div>
+          </div>
+          <div class="tl-item" :ref="el=>{if(el)itemRefs[item.id]=el}" :style="{animationDelay:(i%5)*0.07+'s'}">
+            <div class="tl-card">
+              <!-- poster image -->
+              <img v-if="item.poster" :src="item.poster" alt="" class="tl-card-poster" loading="lazy" @error="$event.target.style.display='none'">
+              <div v-else class="tl-card-fallback" :style="{background:'linear-gradient(135deg,'+phaseFallback(item.phase)+')'}"></div>
+              <div class="tl-card-overlay"></div>
+              <div class="year">{{ item.year }}</div>
+              <div class="title">{{ item.title }}</div>
+              <div class="tags">
+                <span class="tag" :class="'tag-'+item.type">{{ item.type==='movie'?'🎬 MOVIE':'📺 SERIES' }}</span>
+                <span class="tag" :class="'tag-p'+item.phase">PHASE {{ item.phase }}</span>
+              </div>
+              <div class="desc">{{ item.desc }}</div>
+              <div class="rating" v-if="item.rating">
+                <span class="stars">{{ getStars(item.rating) }}</span>
+                <span class="rating-val">{{ item.rating }}/10</span>
+              </div>
+              <div class="rating" v-else>
+                <span style="color:var(--dim);font-size:0.65rem">⏳ Rating pending</span>
+              </div>
+            </div>
+            <div class="tl-dot" :style="{borderColor:phaseColors[item.phase-1]||'var(--neon)',background:phaseColors[item.phase-1]}"></div>
+          </div>
+        </div>
+      </div>
+      <div v-if="!filteredList.length" style="text-align:center;color:var(--dim);padding:40px">No entries match this filter.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const {createApp,ref,computed,onMounted,nextTick} = Vue;
+
+let entries = [];
+const loading = ref(true);
+
+// Load MCU data from external JSON
+fetch('/data/mcu.json')
+  .then(function(r){return r.json()})
+  .then(function(d){
+    entries = d;
+    loading.value = false;
+    var ls = document.getElementById('loading-screen');
+    if(ls){ls.style.opacity='0';ls.style.transition='opacity 0.5s';setTimeout(function(){ls.style.display='none'},500)}
+    mountApp();
+  })
+  .catch(function(err){
+    console.error('Failed to load MCU data:', err);
+    entries = [];
+    loading.value = false;
+    mountApp();
+  });
+
+function pad(n){return n<10?'0'+n:''+n}
+function formatDate(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+
+function mountApp(){
+createApp({
+  setup(){
+    const dashboard = [
+      {id:'movies',icon:'🎬',label:'MOVIES',meta:'34 films'},
+      {id:'series',icon:'📺',label:'SERIES',meta:'12 shows'},
+      {id:'phases',icon:'📅',label:'PHASES',meta:'6 phases'},
+      {id:'search',icon:'🔍',label:'SEARCH',meta:'Find'},
+      {id:'rank',icon:'🏆',label:'RANK',meta:'Top 10'},
+      {id:'about',icon:'⚡',label:'ABOUT',meta:'The V'},
+    ];
+    const phaseColors = ['#ff6b6b','#ffd93d','#6bcbff','#c084fc','#fb923c','#f472b6'];
+    const phaseFallbackColors = [
+      ['#2d0909','#4a1a1a','#2d0909'],
+      ['#2d2d00','#4a4a10','#2d2d00'],
+      ['#092040','#0a3670','#092040'],
+      ['#1a0930','#2d1060','#1a0930'],
+      ['#2d1a00','#4a2d10','#2d1a00'],
+      ['#2d0a1a','#4a1030','#2d0a1a']
+    ];
+    function phaseFallback(p){var c=phaseFallbackColors[p-1]||phaseFallbackColors[0];return c[0]+','+c[1]+','+c[2]}
+    const phases = [1,2,3,4,5,6];
+    const phaseStorylines = [
+      'THE AVENGERS INITIATIVE — Origins of Earth\'s Mightiest Heroes',
+      'CONSEQUENCES & NEW FRONTIERS — Aftermath of the Battle of New York',
+      'THE INFINITY SAGA — The Stones, Thanos & The Ultimate Sacrifice',
+      'THE MULTIVERSE BEGINS — Grief, Legacy & New Heroes',
+      'KANG DYNASTY — Time, War & The Council of Kangs',
+      'SECRET WARS — The Multiverse Collides'
+    ];
+    const activeFilter = ref('all');
+    const selectedHero = ref('');
+    const showSearch = ref(false);
+    const showAbout = ref(false);
+    const showRank = ref(false);
+    const searchQuery = ref('');
+    const itemRefs = ref({});
+    const scrollTarget = ref(null);
+
+    // Derive hero list from data
+    const heroList = computed(()=>{
+      const set = new Set();
+      for(const e of entries){
+        if(e.heroes) e.heroes.forEach(h=>set.add(h));
+      }
+      return [...set].sort();
+    });
+
+    // ---- dynamic hero ----
+    const now = new Date();
+    const todayStr = formatDate(now);
+
+    // find the latest released movie (releaseDate <= today, closest to today)
+    const latestMovie = computed(()=>{
+      let best = null;
+      let bestDate = '';
+      for(const e of entries){
+        if(e.type!=='movie' || !e.releaseDate) continue;
+        if(e.releaseDate <= todayStr){
+          if(!best || e.releaseDate > bestDate){
+            best = e;
+            bestDate = e.releaseDate;
+          }
+        }
+      }
+      return best;
+    });
+
+    const heroPoster = computed(()=>{
+      return latestMovie.value ? latestMovie.value.poster : null;
+    });
+
+    const heroInfo = computed(()=>{
+      if(!latestMovie.value) return null;
+      const e = latestMovie.value;
+      const d = new Date(e.releaseDate);
+      const options = {year:'numeric',month:'long',day:'numeric'};
+      return {
+        title: e.title,
+        releaseDisplay: d.toLocaleDateString('en-US',options)
+      };
+    });
+    // ---- end dynamic hero ----
+
+    const seriesCount = computed(()=>entries.filter(e=>e.type==='series').length);
+    const movieCount = computed(()=>entries.filter(e=>e.type==='movie').length);
+
+    // update metadata
+    dashboard[0].meta = movieCount.value+' films';
+    dashboard[1].meta = seriesCount.value+' shows';
+
+    const filteredList = computed(()=>{
+      let list = [...entries];
+      const f = activeFilter.value;
+      const h = selectedHero.value;
+      if(f==='movies') list = list.filter(e=>e.type==='movie');
+      else if(f==='series') list = list.filter(e=>e.type==='series');
+      else if(f.startsWith('phase')) {
+        const p = parseInt(f.replace('phase',''));
+        list = list.filter(e=>e.phase===p);
+      }
+      if(h) list = list.filter(e=>e.heroes && e.heroes.includes(h));
+      return list;
+    });
+
+    const searchResults = computed(()=>{
+      if(!searchQuery.value) return [];
+      const q = searchQuery.value.toLowerCase();
+      return entries.filter(e=>
+        e.title.toLowerCase().includes(q) ||
+        e.desc.toLowerCase().includes(q) ||
+        String(e.year).includes(q) ||
+        'phase '+e.phase === q
+      );
+    });
+
+    const top10 = computed(()=>{
+      return entries.filter(e=>e.rating).sort((a,b)=>b.rating-a.rating).slice(0,10);
+    });
+
+    function handleDash(id){
+      if(id==='search'){showSearch.value=true;searchQuery.value='';return}
+      if(id==='about'){showAbout.value=true;return}
+      if(id==='rank'){showRank.value=true;return}
+      if(id==='phases'){activeFilter.value='all';selectedHero.value='';document.getElementById('timeline').scrollIntoView({behavior:'smooth'});return}
+      if(id==='movies'){activeFilter.value='movies';selectedHero.value=''; nextTick(()=>document.getElementById('timeline').scrollIntoView({behavior:'smooth'}));return}
+      if(id==='series'){activeFilter.value='series';selectedHero.value=''; nextTick(()=>document.getElementById('timeline').scrollIntoView({behavior:'smooth'}));return}
+      activeFilter.value=id;
+      selectedHero.value='';
+      nextTick(()=>document.getElementById('timeline').scrollIntoView({behavior:'smooth'}));
+    }
+
+    function scrollToTimeline(){
+      document.getElementById('timeline').scrollIntoView({behavior:'smooth'});
+    }
+
+    function scrollToItem(item){
+      showSearch.value=false;
+      searchQuery.value='';
+      activeFilter.value='all';
+      selectedHero.value='';
+      nextTick(()=>{
+        const el = document.querySelector(`[data-item-id="${item.id}"]`) || document.getElementById('timeline');
+        el.scrollIntoView({behavior:'smooth',block:'center'});
+      });
+    }
+
+    function showPhaseDivider(i){
+      if(i===0) return true;
+      return filteredList.value[i].phase !== filteredList.value[i-1].phase;
+    }
+
+    function getStars(rating){
+      if(!rating) return '';
+      const full = Math.floor(rating);
+      const half = rating - full >= 0.5;
+      let s = '';
+      for(let i=0;i<full;i++) s+='★';
+      if(half) s+='½';
+      const empty = 5 - Math.ceil(rating);
+      for(let i=0;i<empty;i++) s+='☆';
+      return s;
+    }
+
+    return {
+      dashboard, entries, phases, phaseColors, phaseFallback,
+      activeFilter, showSearch, showAbout, showRank,
+      searchQuery, itemRefs, scrollTarget,
+      filteredList, searchResults, top10,
+      handleDash, scrollToTimeline, scrollToItem,
+      showPhaseDivider, getStars, phaseStorylines,
+      // hero dynamic
+      heroPoster, heroInfo, loading,
+      heroList, selectedHero
+    };
+  }
+}).mount('#app');
+}
+</script>
+
+<!-- Shop float -->
+<a href="/shop/" class="shop-float" title="Merch Shop">🛒</a>
 </body>
 </html>

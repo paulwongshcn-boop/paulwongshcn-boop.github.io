@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html :lang="lang">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
+<title>Stark Industries Store</title>
+<meta name="version" content="20260508-fix5">
+<script src="/assets/vue.global.js"></script>
+
+
+
+<style>
+:root{--neon:#39ff14;--neon-dim:#1a7a0a;--neon-bg:#0a1a05;--dark-bg:#050a03;--card-bg:rgba(5,10,3,0.85);--border-glow:rgba(57,255,20,0.15);--green-metal:#0d1f0a;--green-light:#6bff47;--green-dark:#0a3a05}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--dark-bg);color:#c8f7c0;overflow-x:hidden;min-height:100vh}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--dark-bg)}::-webkit-scrollbar-thumb{background:var(--neon);border-radius:2px;box-shadow:0 0 8px var(--neon)}
+::selection{background:var(--neon);color:#000}
+.tech-text{font-family:'Courier New',monospace;letter-spacing:.08em}
+.mono-text{font-family:monospace}
+
+/* ═══ Background Effects ═══ */
+body::before{content:'';position:fixed;inset:0;background:
+  linear-gradient(90deg,rgba(57,255,20,0.02) 1px,transparent 1px),
+  linear-gradient(rgba(57,255,20,0.02) 1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(57,255,20,0.06) 0%,transparent 60%);
+  pointer-events:none;z-index:0}
+
+/* ═══ Matrix Rain ═══ */
+.matrix-rain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.08;overflow:hidden;font-family:monospace;color:var(--neon);font-size:14px;line-height:1}
+.matrix-col{position:absolute;top:-100%;animation:matrixFall linear infinite}
+@keyframes matrixFall{0%{transform:translateY(-100%)}100%{transform:translateY(100vh)}}
+
+/* ═══ Scan Line Overlay ═══ */
+.scan-overlay{position:fixed;inset:0;pointer-events:none;z-index:1;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(57,255,20,0.015) 2px,rgba(57,255,20,0.015) 4px)}
+
+/* ═══ Glow Effects ═══ */
+.neon-glow{box-shadow:0 0 5px var(--neon),0 0 15px rgba(57,255,20,0.2)}
+.neon-glow:hover{box-shadow:0 0 10px var(--neon),0 0 30px rgba(57,255,20,0.3)}
+.neon-text{text-shadow:0 0 10px var(--neon),0 0 30px rgba(57,255,20,0.3)}
+.neon-border{border:1px solid rgba(57,255,20,0.15)}
+.neon-border:hover{border-color:rgba(57,255,20,0.4)}
+.neon-pulse{animation:neonPulse 2s ease-in-out infinite}
+@keyframes neonPulse{0%,100%{box-shadow:0 0 5px var(--neon),0 0 10px rgba(57,255,20,0.2)}50%{box-shadow:0 0 15px var(--neon),0 0 40px rgba(57,255,20,0.4)}}
+
+/* ═══ Scan Line Hover ═══ */
+.scan-line{position:absolute;top:0;left:-100%;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--neon),transparent);animation:scanMove 2s ease-in-out infinite;pointer-events:none;opacity:0;box-shadow:0 0 8px var(--neon)}
+:hover>.scan-line{opacity:1}
+@keyframes scanMove{0%,100%{left:-100%}50%{left:100%}}
+
+/* ═══ Card ═══ */
+.card-tech{background:var(--card-bg);border:1px solid rgba(57,255,20,0.08);border-radius:12px;backdrop-filter:blur(8px);transition:all .3s cubic-bezier(0.4,0,0.2,1)}
+.card-tech:hover{border-color:rgba(57,255,20,0.25);box-shadow:0 4px 20px rgba(57,255,20,0.08);transform:translateY(-2px)}
+
+/* ═══ Buttons ═══ */
+.neon-btn{padding:12px 32px;border-radius:6px;border:1px solid var(--neon);background:rgba(57,255,20,0.06);color:var(--neon);font-weight:600;cursor:pointer;transition:all .3s;font-family:'Courier New',monospace;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase}
+.neon-btn:hover{background:var(--neon);color:#000;box-shadow:0 0 20px rgba(57,255,20,0.4)}
+.neon-btn:active{transform:translateY(1px)}
+.neon-btn-solid{background:var(--neon);color:#000;border:1px solid var(--neon)}
+.neon-btn-solid:hover{box-shadow:0 0 25px rgba(57,255,20,0.5);background:#6bff47}
+
+/* ═══ Navigation ═══ */
+.nav-glass{background:rgba(5,10,3,0.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(57,255,20,0.1)}
+.bottom-nav{background:rgba(5,10,3,0.96);backdrop-filter:blur(16px);border-top:1px solid rgba(57,255,20,0.1)}
+
+/* ═══ Helmet Icon ═══ */
+.helmet-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--neon),var(--neon-dim));clip-path:polygon(50%0%,80%20%,100%50%,80%80%,50%100%,20%80%,0%50%,20%20%);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:#000;font-weight:900}
+
+/* ═══ Carousel ═══ */
+.carousel-track{display:flex;transition:transform .5s cubic-bezier(0.4,0,0.2,1)}
+.carousel-dot{width:8px;height:8px;border-radius:50%;background:rgba(57,255,20,0.15);transition:all .3s;cursor:pointer}
+.carousel-dot.active{background:var(--neon);box-shadow:0 0 12px var(--neon);width:28px;border-radius:4px}
+
+/* ═══ Blind Box ═══ */
+.blind-box-machine{position:relative;background:linear-gradient(135deg,#050a03,#0d1f0a);border:2px solid var(--neon);border-radius:16px;overflow:hidden;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(57,255,20,0.1)}
+.blind-box-machine .glass-panel{position:absolute;inset:12px;border:1px solid rgba(57,255,20,0.12);border-radius:8px;background:rgba(57,255,20,0.02)}
+.blind-box-machine .corner{position:absolute;width:20px;height:20px;border:2px solid var(--neon)}
+.blind-box-machine .corner.tl{top:6px;left:6px;border-right:none;border-bottom:none}
+.blind-box-machine .corner.tr{top:6px;right:6px;border-left:none;border-bottom:none}
+.blind-box-machine .corner.bl{bottom:6px;left:6px;border-right:none;border-top:none}
+.blind-box-machine .corner.br{bottom:6px;right:6px;border-left:none;border-top:none}
+
+/* ═══ Product 3D ═══ */
+.product-360{perspective:1000px;transform-style:preserve-3d}
+.product-360-inner{transition:transform .1s;transform-style:preserve-3d}
+
+/* ═══ Quick View ═══ */
+.quick-view{position:absolute;inset:0;background:rgba(5,10,3,0.8);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s}
+.card-tech:hover .quick-view{opacity:1}
+
+/* ═══ Responsive ═══ */
+@media(min-width:1024px){body{font-size:16px}.carousel-item{min-width:calc(80vw - 48px)}}
+@media(min-width:768px)and (max-width:1023px){body{font-size:15px}.carousel-item{min-width:100%}}
+@media(max-width:767px){body{font-size:14px}.carousel-item{min-width:100%}button,a{min-height:44px}}
+
+/* ═══ Utility ═══ */
+.card-tech .corner-accent{position:absolute;width:12px;height:12px;border:1px solid rgba(57,255,20,0.15);pointer-events:none}
+.card-tech:hover .corner-accent{border-color:rgba(57,255,20,0.4)}
+.glass-modal{background:rgba(5,10,3,0.95);backdrop-filter:blur(20px);border:1px solid rgba(57,255,20,0.15);border-radius:16px}
+.page-enter{animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.arc-btn{background:rgba(57,255,20,0.06);border:1px solid var(--neon);color:var(--neon)}
+.iron-btn{background:var(--neon);color:#000;border:none;font-family:'Courier New',monospace;letter-spacing:.1em}
+.iron-btn:hover{box-shadow:0 0 20px rgba(57,255,20,0.4)}
+</style>
+<script src="/assets/tailwind-play.js"></script>
+<script>
+tailwind.config={theme:{extend:{colors:{'neon':'#39ff14','neon-dim':'#1a7a0a'}}}}
+</script>
+
+
+</head>
+<body>
+<!-- Matrix Rain Canvas -->
+<canvas id="matrixCanvas" class="matrix-rain"></canvas>
+<div class="scan-overlay"></div>
+
+
+
+
+<div id="app-init" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#050a03;color:#39ff14;font-family:monospace;flex-direction:column;z-index:9998">
+  <div style="font-size:3rem;margin-bottom:1rem">⚡</div>
+  <div style="font-size:1rem;letter-spacing:.2em">STARK INDUSTRIES</div>
+  <div style="margin-top:1rem;width:32px;height:32px;border:2px solid rgba(57,255,20,0.2);border-top-color:#39ff14;border-radius:50%;animation:spInit .8s linear infinite"></div>
+  <div style="font-size:0.6rem;color:rgba(57,255,20,0.3);margin-top:0.8rem">INITIALIZING</div>
+</div>
+<style>@keyframes spInit{to{transform:rotate(360deg)}}</style>
+<script src="/assets/tailwind-play.js"></script>
+<div id="app">
+  <!-- ═══ Navigation ═══ -->
+  <nav class="fixed top-0 left-0 right-0 z-50 nav-glass" :class="{'hidden md:flex':currentPage!=='cart'}">
+    <div class="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-3 cursor-pointer" @click="goHome">
+        <div class="helmet-icon">S</div>
+        <span class="tech-text text-neon text-lg hidden sm:block font-bold tracking-widest neon-text">STARK INDUSTRIES</span>
+      </div>
+      <div class="hidden md:flex items-center gap-5">
+        <a v-for="item in navItems()" :key="item.id" @click="navigate(item.id)" class="cursor-pointer text-xs font-medium transition-all tracking-wider uppercase" :class="currentPage===item.id?'text-neon neon-text':'text-green-800 hover:text-neon'">{{item.label}}</a>
+        <div class="border border-neon/30 text-neon hover:bg-neon/10 text-[11px] font-bold px-2 py-1 rounded transition-all cursor-pointer" @click="toggleLang"><span class="inline" v-text="tr.value.EE"></span></div>
+          <div class="relative cursor-pointer neon-pulse rounded-full p-1" @click="navigate('cart')">
+          <span class="text-xl">⚡</span>
+          <span v-if="cart.length" class="absolute -top-1 -right-1 bg-neon text-black text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">{{cart.length}}</span>
+        </div>
+      </div>
+      <button class="md:hidden text-neon text-2xl" @click="mobileMenuOpen=!mobileMenuOpen">☰</button>
+    </div>
+    <div v-if="mobileMenuOpen" class="md:hidden fixed inset-0 z-50 flex items-center justify-center" style="background:rgba(5,10,3,0.97);backdrop-filter:blur(20px);">
+      <button class="absolute top-4 right-4 text-neon text-3xl" @click="mobileMenuOpen=!mobileMenuOpen">✕</button>
+      <div class="flex flex-col items-center gap-8">
+        <div v-for="item in navItems()" :key="item.id" @click="navigate(item.id);mobileMenuOpen=false" class="text-2xl font-bold tracking-wider uppercase cursor-pointer" :class="currentPage===item.id?'text-neon neon-text':'text-green-800 hover:text-neon'">{{item.label}}</div>
+        <div @click="navigate('cart');mobileMenuOpen=false" class="text-2xl font-bold text-neon neon-text cursor-pointer">⚡ CART ({{cart.length}})</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══ Mobile Bottom Nav ═══ -->
+  <div class="md:hidden fixed bottom-0 left-0 right-0 z-50 bottom-nav flex items-center justify-around py-2 px-2">
+    <div v-for="tab in mobileTabs()" :key="tab.id" @click="navigate(tab.id)" class="flex flex-col items-center gap-1 cursor-pointer px-3 py-1 rounded-lg transition-colors" :class="currentPage===tab.id?'text-neon':'text-green-900'">
+      <span class="text-xl">{{tab.icon}}</span>
+      <span class="text-[9px] font-medium uppercase tracking-wider">{{tab.label}}</span>
+    </div>
+  </div>
+
+  <!-- ═══ Content ═══ -->
+  <main class="pt-14 pb-16 md:pb-0 min-h-screen relative z-10">
+
+    <!-- ── HOME ── -->
+    <div v-show="currentPage==='home'" class="page-enter">
+      <div class="relative overflow-hidden" :style="{height:heroHeight+'px'}">
+        <div class="carousel-track h-full" :style="{transform:'translateX(-'+carouselIndex*100+'%)'}">
+          <div v-for="(slide,i) in carouselSlides" :key="i" class="carousel-item h-full flex-shrink-0 relative flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0" :style="{background:slide.bg}"></div>
+            <div class="absolute inset-0 opacity-15" style="background:radial-gradient(circle at 50% 50%,var(--neon),transparent 70%)"></div>
+            <img :src="slide.img" class="absolute inset-0 w-full h-full object-cover opacity-30" loading="lazy">
+            <div class="absolute inset-0" style="background:linear-gradient(90deg,rgba(5,10,3,0.6) 0%,transparent 50%,rgba(5,10,3,0.6) 100%)"></div>
+            <div class="relative z-10 text-center px-6 max-w-3xl">
+              <div class="text-5xl sm:text-7xl mb-4">{{slide.icon}}</div>
+              <h2 class="tech-text text-3xl sm:text-5xl font-bold mb-3 neon-text" :style="{color:'var(--neon)'}">{{slide.title}}</h2>
+              <p class="text-green-700 text-sm sm:text-base mb-6 max-w-lg mx-auto mono-text">{{slide.desc}}</p>
+              <button class="neon-btn text-xs" @click="navigate(slide.cta)">{{t((typeof slide.ctaText==='function'?slide.ctaText():slide.ctaText)Key)}}</button>
+            </div>
+          </div>
+        </div>
+        <button v-if="windowWidth>=768" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 text-3xl text-neon/50 hover:text-neon transition-colors" @click="carouselIndex=(carouselIndex-1+carouselSlides.length)%carouselSlides.length">‹</button>
+        <button v-if="windowWidth>=768" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 text-3xl text-neon/50 hover:text-neon transition-colors" @click="carouselIndex=(carouselIndex+1)%carouselSlides.length">›</button>
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+          <div v-for="(_,i) in carouselSlides" :key="i" class="carousel-dot" :class="{'active':i===carouselIndex}" @click="carouselIndex=i"></div>
+        </div>
+        <div class="absolute inset-0 z-10 md:hidden" @touchstart="touchStart" @touchend="touchEnd"></div>
+      </div>
+
+      <!-- Stats -->
+      <div class="max-w-7xl mx-auto px-4 py-6">
+        <div class="card-tech p-4 flex flex-wrap justify-around gap-4 neon-border">
+          <div class="text-center"><div class="tech-text text-2xl font-bold text-neon neon-text">87</div><div class="text-xs text-green-800 mono-text"><span v-text="tr.value.a"></span></div></div>
+          <div class="text-center"><div class="tech-text text-2xl font-bold text-neon neon-text">1,247</div><div class="text-xs text-green-800 mono-text"><span class="inline" v-text="tr.value.b"></span></div></div>
+          <div class="text-center"><div class="tech-text text-2xl font-bold text-neon neon-text">99.7%</div><div class="text-xs text-green-800 mono-text"><span class="inline" v-text="tr.value.c"></span></div></div>
+          <div class="text-center"><div class="tech-text text-2xl font-bold text-neon neon-text">∞</div><div class="text-xs text-green-800 mono-text"><span class="inline" v-text="tr.value.d"></span></div></div>
+        </div>
+      </div>
+
+      <!-- Quick Entry -->
+      <div class="max-w-7xl mx-auto px-4 pb-8">
+        <h3 class="tech-text text-lg font-bold text-neon mb-4 tracking-[.15em] neon-text">// QUICK ACCESS</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div v-for="entry in quickEntries" :key="entry.id" @click="navigate(entry.route)" class="card-tech relative p-6 cursor-pointer overflow-hidden group neon-border">
+            <div class="scan-line"></div>
+            <div class="corner-accent" style="top:8px;left:8px;border-right:none;border-bottom:none"></div>
+            <div class="corner-accent" style="top:8px;right:8px;border-left:none;border-bottom:none"></div>
+            <div class="corner-accent" style="bottom:8px;left:8px;border-right:none;border-top:none"></div>
+            <div class="corner-accent" style="bottom:8px;right:8px;border-left:none;border-top:none"></div>
+            <div class="text-3xl mb-2">{{entry.icon}}</div>
+            <h4 class="text-sm font-bold text-white mb-1 tech-text">{{entry.title}}</h4>
+            <p class="text-xs text-green-800 mono-text">{{entry.desc}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PRODUCTS ── -->
+    <div v-show="currentPage==='products'" class="page-enter">
+      <div class="max-w-7xl mx-auto px-4 py-8">
+        <h2 class="tech-text text-2xl font-bold text-neon mb-6 tracking-[.15em] neon-text"><span class="inline" v-text="tr.value.e"></span></h2>
+        <div class="flex gap-6">
+          <div class="hidden lg:block w-56 flex-shrink-0">
+            <div class="card-tech p-4 sticky top-20 neon-border">
+              <h4 class="tech-text text-xs font-bold text-neon mb-4 tracking-wider">FILTERS</h4>
+              <div class="mb-4"><label class="text-[10px] text-green-800 block mb-2 mono-text uppercase">Hero</label>
+                <select v-model="filters.hero" class="w-full bg-dark-bg border border-green-900 rounded-lg p-2 text-xs text-neon outline-none focus:border-neon" style="background:#050a03">
+                  <option value="" class="bg-black"><span class="inline" v-text="tr.value.f"></span></option><option v-for="h in heroes" :key="h" class="bg-black">{{h}}</option>
+                </select></div>
+              <div class="mb-4"><label class="text-[10px] text-green-800 block mb-2 mono-text uppercase">Type</label>
+                <select v-model="filters.type" class="w-full bg-dark-bg border border-green-900 rounded-lg p-2 text-xs text-neon outline-none focus:border-neon" style="background:#050a03">
+                  <option value="" class="bg-black"><span class="inline" v-text="tr.value.f"></span></option><option class="bg-black"><span class="inline" v-text="tr.value.g"></span></option><option class="bg-black"><span class="inline" v-text="tr.value.h"></span></option><option class="bg-black"><span class="inline" v-text="tr.value.j"></span></option><option class="bg-black"><span class="inline" v-text="tr.value.k"></span></option>
+                </select></div>
+              <div class="mb-4"><label class="text-[10px] text-green-800 block mb-2 mono-text uppercase">Price</label>
+                <select v-model="filters.priceRange" class="w-full bg-dark-bg border border-green-900 rounded-lg p-2 text-xs text-neon outline-none focus:border-neon" style="background:#050a03">
+                  <option value="" class="bg-black"><span class="inline" v-text="tr.value.f"></span></option><option value="0-500" class="bg-black"><span class="inline" v-text="tr.value.r"></span></option><option value="500-2000" class="bg-black"><span class="inline" v-text="tr.value.s"></span></option><option value="2000-5000" class="bg-black"><span class="inline" v-text="tr.value.t"></span></option><option value="5000+" class="bg-black"><span class="inline" v-text="tr.value.u"></span></option>
+                </select></div>
+              <button class="neon-btn text-xs py-2 w-full" @click="filters={hero:'',type:'',priceRange:''}"><span class="inline" v-text="tr.value.m"></span></button>
+            </div>
+          </div>
+          <div class="lg:hidden w-full mb-4">
+            <button class="neon-btn text-xs py-2 px-4 w-full" @click="filterOpen=!filterOpen"><span class="inline" v-text="tr.value.n"></span></button>
+            <div v-if="filterOpen" class="card-tech p-4 mt-2 grid grid-cols-3 gap-3">
+              <select v-model="filters.hero" class="bg-dark-bg border border-green-900 rounded-lg p-2 text-xs text-neon" style="background:#050a03"><option value=""><span class="inline" v-text="tr.value.o"></span></option><option v-for="h in heroes">{{h}}</option></select>
+              <select v-model="filters.type" class="bg-dark-bg border border-green-900 rounded-lg p-2 text-xs text-neon" style="background:#050a03"><option value=""><span class="inline" v-text="tr.value.p"></span></option><option><span class="inline" v-text="tr.value.g"></span></option><option><span class="inline" v-text="tr.value.h"></span></option><option><span class="inline" v-text="tr.value.j"></span></option><option><span class="inline" v-text="tr.value.k"></span></option></select>
+              <select v-model="filters.priceRange" class="bg-dark-bg border border-green-900 rounded-lg p-2 text-xs text-neon" style="background:#050a03"><option value=""><span class="inline" v-text="tr.value.q"></span></option><option value="0-500">¥500↓</option><option value="500-2000">¥500-2K</option><option value="2000-5000">¥2K-5K</option><option value="5000+">¥5K↑</option></select>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-4">
+          <div v-for="product in filteredProducts" :key="product.id" @click="viewProduct(product)" class="card-tech relative p-3 cursor-pointer overflow-hidden group">
+            <div class="scan-line"></div>
+            <div class="corner-accent" style="top:6px;left:6px;border-right:none;border-bottom:none"></div>
+            <div class="corner-accent" style="top:6px;right:6px;border-left:none;border-bottom:none"></div>
+            <div class="corner-accent" style="bottom:6px;left:6px;border-right:none;border-top:none"></div>
+            <div class="corner-accent" style="bottom:6px;right:6px;border-left:none;border-top:none"></div>
+            <div class="aspect-square rounded-lg mb-2 flex items-center justify-center text-4xl" :style="{background:product.bg||'#0d1f0a'}">{{product.icon}}</div>
+            <h4 class="text-xs font-bold text-white tech-text tracking-wider">{{product.name}}</h4>
+            <div class="flex items-center justify-between mt-1">
+              <span class="tech-text text-neon text-xs font-bold neon-text">¥{{product.price}}</span>
+              <span class="text-[9px] text-green-800 mono-text">{{product.hero}}</span>
+            </div>
+            <div class="quick-view rounded-lg"><button class="neon-btn text-xs py-2 px-4"><span class="inline" v-text="tr.value.v"></span></button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DETAIL ── -->
+    <div v-show="currentPage==='detail'" class="page-enter">
+      <div class="max-w-7xl mx-auto px-4 py-8">
+        <button class="text-green-800 hover:text-neon text-xs mb-6 flex items-center gap-2 mono-text" @click="navigate('products')"><span class="inline" v-text="tr.value.w"></span></button>
+        <div v-if="selectedProduct" class="flex flex-col lg:flex-row gap-8">
+          <div class="lg:w-1/2">
+            <div class="product-360 card-tech p-6 aspect-square flex items-center justify-center relative overflow-hidden" @mousemove="rotate3d" @mouseleave="reset3d">
+              <div class="product-360-inner text-7xl sm:text-8xl">{{selectedProduct.icon}}</div>
+              <div class="absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] text-green-800 mono-text"><span class="inline" v-text="tr.value.Z"></span></div>
+            </div>
+          </div>
+          <div class="lg:w-1/2">
+            <span class="tech-text text-[10px] text-neon bg-neon/5 px-3 py-1 rounded-full border border-neon/20">{{selectedProduct.hero}} · {{selectedProduct.type||'GEAR'}}</span>
+            <h2 class="text-2xl font-bold mt-3 text-white tech-text tracking-wider">{{selectedProduct.name}}</h2>
+            <div class="flex items-center gap-4 mt-4">
+              <span class="tech-text text-3xl font-bold text-neon neon-text">¥{{selectedProduct.price}}</span>
+              <span class="text-xs text-green-800 line-through mono-text">¥{{(selectedProduct.price*1.3).toFixed(0)}}</span>
+              <span class="text-[10px] bg-neon/10 text-neon px-2 py-1 rounded-full border border-neon/20 mono-text"><span class="inline" v-text="tr.value.x"></span></span>
+            </div>
+            <p class="text-green-700 text-sm mt-4 leading-relaxed mono-text">{{selectedProduct.desc||'Stark Industries premium equipment, featuring the latest Arc Reactor technology. Each product undergoes rigorous armor compatibility testing.'}}</p>
+            <div class="flex gap-3 mt-6">
+              <button class="neon-btn text-xs flex-1 py-3" @click="addToCart(selectedProduct)"><span class="inline" v-text="tr.value.y"></span></button>
+              <button class="neon-btn text-xs py-3 px-4"><span class="inline" v-text="tr.value.z"></span></button>
+            </div>
+            <div class="grid grid-cols-3 gap-3 mt-6">
+              <div class="card-tech p-3 text-center"><div class="text-[10px] text-green-800 mono-text"><span class="inline" v-text="tr.value.A"></span></div><div class="tech-text text-xs text-neon font-bold">ARC-Ⅲ</div></div>
+              <div class="card-tech p-3 text-center"><div class="text-[10px] text-green-800 mono-text"><span class="inline" v-text="tr.value.B"></span></div><div class="tech-text text-xs text-neon font-bold neon-text">3.2GW</div></div>
+              <div class="card-tech p-3 text-center"><div class="text-[10px] text-green-800 mono-text"><span class="inline" v-text="tr.value.C"></span></div><div class="tech-text text-xs text-neon font-bold">MK Ⅲ+</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-12">
+          <h3 class="tech-text text-base font-bold text-neon mb-4 tracking-wider neon-text"><span class="inline" v-text="tr.value.D"></span></h3>
+          <div class="flex gap-3 overflow-x-auto pb-4 snap-x">
+            <div v-for="item in relatedProducts" :key="item.id" @click="viewProduct(item)" class="card-tech snap-start flex-shrink-0 w-36 p-3 cursor-pointer">
+              <div class="text-3xl mb-2">{{item.icon}}</div>
+              <h4 class="text-xs font-bold text-white tech-text">{{item.name}}</h4>
+              <span class="tech-text text-neon text-xs font-bold">¥{{item.price}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CART ── -->
+    <div v-show="currentPage==='cart'" class="page-enter">
+      <div class="max-w-7xl mx-auto px-4 py-8">
+        <h2 class="tech-text text-2xl font-bold text-neon mb-6 tracking-[.15em] neon-text"><span class="inline" v-text="tr.value.E"></span></h2>
+        <div class="flex flex-col lg:flex-row gap-6">
+          <div class="lg:w-2/3">
+            <div v-if="cart.length===0" class="card-tech p-12 text-center">
+              <div class="text-6xl mb-4">🛡️</div>
+              <p class="text-green-800 mono-text text-sm"><span class="inline" v-text="tr.value.F"></span></p>
+              <button class="neon-btn mt-4 text-xs" @click="navigate('products')"><span class="inline" v-text="tr.value.G"></span></button>
+            </div>
+            <div v-for="(item,i) in cart" :key="i" class="card-tech p-4 mb-3 flex items-center gap-4">
+              <div class="text-3xl w-12 text-center">{{item.icon}}</div>
+              <div class="flex-1 min-w-0"><h4 class="text-xs font-bold text-white tech-text">{{item.name}}</h4><span class="tech-text text-neon text-xs">¥{{item.price}}</span></div>
+              <div class="flex items-center gap-2">
+                <button class="w-8 h-8 rounded-lg border border-green-800 flex items-center justify-center text-xs text-neon hover:border-neon" @click="item.qty>1?item.qty--:cart.splice(i,1)">−</button>
+                <span class="tech-text w-6 text-center text-xs text-white">{{item.qty}}</span>
+                <button class="w-8 h-8 rounded-lg border border-green-800 flex items-center justify-center text-xs text-neon hover:border-neon" @click="item.qty++">+</button>
+              </div>
+              <span class="tech-text text-neon font-bold w-20 text-right text-xs neon-text">{{item.price*item.qty}}</span>
+              <button class="text-green-800 hover:text-neon text-lg ml-2" @click="cart.splice(i,1)">✕</button>
+            </div>
+          </div>
+          <div class="lg:w-1/3" v-if="cart.length">
+            <div class="card-tech p-6 lg:sticky lg:top-20 neon-border">
+              <h4 class="text-xs font-bold text-neon mb-4 tracking-wider uppercase"><span class="inline" v-text="tr.value.H"></span></h4>
+              <div class="flex justify-between text-xs py-2"><span class="text-green-800 mono-text"><span class="inline" v-text="tr.value.I"></span></span><span class="text-white font-bold">¥{{cartTotal}}</span></div>
+              <div class="flex justify-between text-xs py-2"><span class="text-green-800 mono-text"><span class="inline" v-text="tr.value.J"></span></span><span class="text-neon">− ¥{{Math.min(parseInt(cartTotal*0.1),500)}}</span></div>
+              <div class="border-t border-green-900 my-3"></div>
+              <div class="flex justify-between py-2"><span class="text-xs font-bold text-white"><span class="inline" v-text="tr.value.K"></span></span><span class="tech-text text-neon font-bold text-xl neon-text">¥{{Math.max(0,cartTotal-Math.min(parseInt(cartTotal*0.1),500))}}</span></div>
+              <button class="neon-btn text-xs w-full py-3 mt-4 flex items-center justify-center gap-2 neon-pulse" @click="checkout"><span class="inline" v-text="tr.value.L"></span></button>
+              <p class="text-center text-[9px] text-green-900 mt-2 mono-text"><span class="inline" v-text="tr.value.M"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BLIND BOX ── -->
+    <div v-show="currentPage==='blindbox'" class="page-enter">
+      <div class="max-w-4xl mx-auto px-4 py-8 text-center">
+        <h2 class="tech-text text-2xl font-bold text-neon mb-2 tracking-[.15em] neon-text"><span class="inline" v-text="tr.value.N"></span></h2>
+        <p class="text-green-800 text-xs mb-8 mono-text"><span class="inline" v-text="tr.value.O"></span></p>
+        <div class="blind-box-machine max-w-sm mx-auto mb-6" :class="{'neon-pulse':blindBoxAnimating}">
+          <div class="glass-panel"></div>
+          <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+          <div class="relative z-10 text-center p-8">
+            <div v-if="!blindBoxResult" class="text-6xl mb-4">🦾</div>
+            <div v-else class="text-6xl mb-4 animate-bounce">{{blindBoxResult.icon}}</div>
+            <h3 v-if="blindBoxResult" class="tech-text text-lg font-bold text-neon neon-text mb-2">{{blindBoxResult.name}}</h3>
+            <p v-if="blindBoxResult" class="text-[10px] text-green-700 mb-4 mono-text">{{blindBoxResult.desc}}</p>
+            <div v-if="blindBoxScanning" class="flex items-center justify-center gap-2 my-4">
+              <div class="w-3 h-3 rounded-full bg-neon animate-pulse" style="box-shadow:0 0 8px var(--neon)"></div>
+              <span class="tech-text text-xs text-neon"><span class="inline" v-text="tr.value.P"></span> {{scanProgress}}%</span>
+            </div>
+          </div>
+        </div>
+        <button class="neon-btn text-xs px-8" :disabled="blindBoxScanning" @click="startBlindBox">{{blindBoxScanning?('⏳ '+tr.value.P):blindBoxResult?tr.value.R:tr.value.Q}}</button>
+        <button v-if="blindBoxResult" class="neon-btn text-xs ml-3 px-6" @click="addToCart(blindBoxResult)"><span class="inline" v-text="tr.value.S"></span></button>
+      </div>
+    </div>
+
+    <!-- ── CUSTOMIZE ── -->
+    <div v-show="currentPage==='customize'" class="page-enter">
+      <div class="max-w-7xl mx-auto px-4 py-8">
+        <h2 class="tech-text text-2xl font-bold text-neon mb-6 tracking-[.15em] neon-text"><span class="inline" v-text="tr.value.T"></span></h2>
+        <div class="flex flex-col lg:flex-row gap-6">
+          <div class="lg:w-1/2 card-tech p-6 aspect-square flex items-center justify-center relative overflow-hidden">
+            <div class="text-7xl absolute" :style="{transform:'scale('+customizeScale+')',color:customizeColor}">🦾</div>
+            <p class="absolute bottom-4 text-[10px] text-green-800 mono-text"><span class="inline" v-text="tr.value.Y"></span></p>
+          </div>
+          <div class="lg:w-1/2">
+            <div class="card-tech p-6">
+              <h3 class="text-xs font-bold text-neon mb-4 tracking-wider uppercase">// CONFIGURATION</h3>
+              <div class="mb-4"><label class="text-[10px] text-green-800 block mb-2 mono-text"><span class="inline" v-text="tr.value.U"></span></label>
+                <div class="flex gap-2 flex-wrap">
+                  <div v-for="c in colors" :key="c.name" @click="customizeColor=c.value" class="w-9 h-9 rounded-lg cursor-pointer border-2 transition-all" :class="customizeColor===c.value?'border-neon scale-110 neon-glow':'border-transparent'" :style="{background:c.value}"></div>
+                </div>
+              </div>
+              <div class="mb-4"><label class="text-[10px] text-green-800 block mb-2 mono-text"><span class="inline" v-text="tr.value.V"></span></label>
+                <input type="range" min="0.5" max="2" step="0.1" v-model.number="customizeScale" class="w-full accent-neon" style="accent-color:var(--neon)">
+                <div class="flex justify-between text-[10px] text-green-900"><span>0.5×</span><span>2×</span></div>
+              </div>
+              <div class="mb-4"><label class="text-[10px] text-green-800 block mb-2 mono-text"><span class="inline" v-text="tr.value.W"></span></label>
+                <div class="grid grid-cols-2 gap-2">
+                  <div v-for="mod in modules" :key="mod.name" @click="mod.selected=!mod.selected" class="p-3 rounded-lg border cursor-pointer transition-all text-xs text-center" :class="mod.selected?'border-neon bg-neon/5 text-neon':'border-green-900 text-green-800 hover:border-green-700'">{{mod.icon}} {{mod.name}}</div>
+                </div>
+              </div>
+              <button class="neon-btn text-xs w-full py-3 mt-4"><span class="inline" v-text="tr.value.X"></span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CHECKOUT MODAL ── -->
+    <div v-if="showCheckoutModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4" style="background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);">
+      <div class="glass-modal max-w-sm w-full p-8 text-center">
+        <div class="text-6xl mb-4 neon-pulse inline-block rounded-full p-4" style="box-shadow:0 0 30px var(--neon);color:var(--neon)">⚡</div>
+        <h3 class="tech-text text-lg font-bold text-neon mb-2 neon-text"><span class="inline" v-text="tr.value.AA"></span></h3>
+        <p class="text-green-700 text-xs mb-6 mono-text"><span class="inline" v-text="tr.value.BB"></span></p>
+        <div class="flex gap-3 justify-center">
+          <button class="neon-btn text-xs" @click="showCheckoutModal=false;navigate('home')"><span class="inline" v-text="tr.value.CC"></span></button>
+          <button class="neon-btn-solid text-xs px-6 py-3 rounded-lg font-bold" @click="showCheckoutModal=false;navigate('products')"><span class="inline" v-text="tr.value.DD"></span></button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+
+// Matrix Rain Effect
+(function(){
+  const canvas=document.getElementById('matrixCanvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const cols=Math.floor(canvas.width/16);
+  const drops=Array(cols).fill(1);
+  const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$%^&*()<>?/[]{}=+-_~';
+  function draw(){
+    ctx.fillStyle='rgba(5,10,3,0.05)';ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='rgba(57,255,20,0.12)';ctx.font='14px monospace';
+    for(let i=0;i<drops.length;i++){
+      const text=chars[Math.floor(Math.random()*chars.length)];
+      ctx.fillText(text,i*16,drops[i]*16);
+      if(drops[i]*16>canvas.height&&Math.random()>0.975)drops[i]=0;
+      drops[i]++;
+    }
+  }
+  setInterval(draw,50);
+  window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;drops.fill(1);});
+})();
+</script>
+
+<script>
+const {createApp,ref,reactive,computed,onMounted,onBeforeUnmount}=Vue;
+var app=createApp({
+  setup(){
+    
+    const lang=ref('en');
+    const t=(key)=>i18n[key]?.[lang.value]||key;
+    const toggleLang=()=>{lang.value=lang.value==='en'?'zh':'en';document.documentElement.lang=lang.value};
+    const tr=computed(()=>{
+        const l=lang.value;
+        return {
+            sl1T:i18n.slide1_title[l],sl1D:i18n.slide1_desc[l],sl1C:i18n.slide1_cta[l],
+            sl2T:i18n.slide2_title[l],sl2D:i18n.slide2_desc[l],sl2C:i18n.slide2_cta[l],
+            sl3T:i18n.slide3_title[l],sl3D:i18n.slide3_desc[l],sl3C:i18n.slide3_cta[l],
+            a:i18n.stat_armor[l],b:i18n.stat_equip[l],c:i18n.stat_reactor[l],d:i18n.stat_energy[l],
+            e:i18n.armory_title[l],f:i18n.filter_all[l],g:i18n.filter_armor[l],h:i18n.filter_weapon[l],
+            j:i18n.filter_gear[l],k:i18n.filter_collect[l],m:i18n.filter_reset[l],n:i18n.filter_btn[l],
+            o:i18n.filter_hero[l],p:i18n.filter_type[l],q:i18n.filter_price[l],
+            r:i18n.price_below[l],s:i18n.price_mid[l],t:i18n.price_high[l],u:i18n.price_top[l],
+            v:i18n.quick_view[l],w:i18n.back_armory[l],x:i18n.limited[l],y:i18n.add_cart[l],
+            z:i18n.wishlist[l],A:i18n.power[l],B:i18n.output[l],C:i18n.compat[l],D:i18n.related[l],
+            E:i18n.cart_title[l],F:i18n.cart_empty[l],G:i18n.go_armory[l],
+            H:i18n.checkout_title[l],I:i18n.subtotal[l],J:i18n.points[l],K:i18n.total[l],
+            L:i18n.checkout_btn[l],M:i18n.checkout_note[l],
+            N:i18n.blind_title[l],O:i18n.blind_desc[l],P:i18n.blind_scanning[l],
+            Q:i18n.blind_activate[l],R:i18n.blind_again[l],S:i18n.blind_add[l],
+            T:i18n.custom_title[l],U:i18n.custom_color[l],V:i18n.custom_scale[l],
+            W:i18n.custom_modules[l],X:i18n.custom_order[l],Y:i18n.custom_zoom[l],
+            Z:i18n.rotate_hint[l],
+            AA:i18n.modal_title[l],BB:i18n.modal_desc[l],CC:i18n.modal_back[l],DD:i18n.modal_continue[l],
+            EE:i18n.lang_label[l],
+        };
+    });
+
+            const i18n={
+        site_title:{en:'Stark Industries Store',zh:'斯塔克工业商店'},
+        nav_armory:{en:'ARMORY',zh:'英雄装备库'},nav_blind:{en:'BLIND BOX',zh:'英雄盲盒机'},
+        nav_lab:{en:'CUSTOM LAB',zh:'定制工坊'},nav_cart:{en:'CART',zh:'购物车'},
+        nav_home:{en:'HOME',zh:'首页'},nav_shop:{en:'SHOP',zh:'商品'},nav_my:{en:'MY',zh:'我的'},
+        slide1_title:{en:'MARK LXXXV',zh:'Mark LXXXV 旗舰战甲'},
+        slide1_desc:{en:'NANO TECHNOLOGY - ARC REACTOR MK VIII',zh:'全新纳米技术 - 方舟反应堆 Mark VIII'},
+        slide1_cta:{en:'EXPLORE',zh:'立即探索'},
+        slide2_title:{en:'VIBRANIUM SHIELD',zh:'振金盾牌'},
+        slide2_desc:{en:'WAKANDA TECH - VIBRANIUM ALLOY - STARK CERTIFIED',zh:'瓦坎达科技 - 振金合金 - 斯塔克工业认证'},
+        slide2_cta:{en:'VIEW',zh:'查看详情'},
+        slide3_title:{en:'ARC REACTOR LIMITED',zh:'方舟反应堆 - 限量版'},
+        slide3_desc:{en:'MINIATURE FUSION ENERGY - LIMITED EDITION',zh:'小型化聚变能源 - 限量发售'},
+        slide3_cta:{en:'OPEN BOX',zh:'开启盲盒'},
+        stat_armor:{en:'ARMOR MODELS',zh:'战甲型号'},stat_equip:{en:'EQUIPMENTS',zh:'英雄装备'},
+        stat_reactor:{en:'ARC REACTOR OUTPUT',zh:'方舟反应效率'},stat_energy:{en:'ENERGY RESERVE',zh:'能源供应'},
+        armory_title:{en:'ARMORY EQUIPMENT',zh:'英雄装备库'},
+        filter_all:{en:'ALL',zh:'全部'},filter_armor:{en:'ARMOR',zh:'战甲'},filter_weapon:{en:'WEAPON',zh:'武器'},
+        filter_gear:{en:'GEAR',zh:'装备'},filter_collect:{en:'COLLECTIBLE',zh:'周边'},
+        filter_reset:{en:'RESET',zh:'重置'},filter_btn:{en:'FILTER',zh:'筛选'},
+        filter_hero:{en:'HERO',zh:'英雄'},filter_type:{en:'TYPE',zh:'类型'},filter_price:{en:'PRICE',zh:'价格'},
+        price_below:{en:'BELOW 500',zh:'500以下'},price_mid:{en:'500-2K',zh:'500-2000'},
+        price_high:{en:'2K-5K',zh:'2000-5000'},price_top:{en:'5K+',zh:'5000以上'},
+        quick_view:{en:'QUICK VIEW',zh:'快速查看'},
+        back_armory:{en:'BACK TO ARMORY',zh:'返回装备库'},
+        limited:{en:'LIMITED OFFER',zh:'限时优惠'},
+        add_cart:{en:'ADD TO CART',zh:'加入购物车'},
+        wishlist:{en:'WISHLIST',zh:'收藏'},
+        power:{en:'POWER',zh:'能源'},output:{en:'OUTPUT',zh:'功率'},compat:{en:'COMPAT',zh:'兼容'},
+        related:{en:'RELATED EQUIPMENT',zh:'相关装备推荐'},
+        cart_title:{en:'ARC REACTOR - CART',zh:'方舟反应堆 - 购物车'},
+        cart_empty:{en:'ARMORY IS EMPTY',zh:'战甲库为空'},
+        go_armory:{en:'GO TO ARMORY',zh:'前往装备库'},
+        checkout_title:{en:'CHECKOUT',zh:'结算面板'},
+        subtotal:{en:'SUBTOTAL',zh:'商品小计'},points:{en:'POINTS',zh:'积分抵扣'},
+        total:{en:'TOTAL',zh:'应付款'},
+        checkout_btn:{en:'ARC CHARGING - CHECKOUT',zh:'方舟反应堆充能 - 立即结算'},
+        checkout_note:{en:'StarkPay - ARC Coin Accepted',zh:'支持 StarkPay - ARC 能源币'},
+        blind_title:{en:'HERO BLIND BOX',zh:'英雄盲盒机'},
+        blind_desc:{en:'ACTIVATE SCAN - WIN RARE GEAR',zh:'启动战甲扫描 - 抽取稀有装备'},
+        blind_scanning:{en:'SCANNING ...',zh:'扫描中 ...'},
+        blind_activate:{en:'ACTIVATE SCAN',zh:'启动扫描'},
+        blind_again:{en:'DRAW AGAIN',zh:'再抽一次'},
+        blind_add:{en:'ADD TO ARMORY',zh:'收入战甲库'},
+        custom_title:{en:'ARMOR CUSTOM LAB',zh:'战甲定制工坊'},
+        custom_color:{en:'COLOR SCHEME',zh:'配色方案'},
+        custom_scale:{en:'SIZE SCALE',zh:'尺寸缩放'},
+        custom_modules:{en:'MODULES',zh:'选配模块'},
+        custom_order:{en:'ADD TO ORDER',zh:'加入定制清单'},
+        custom_zoom:{en:'PINCH TO ZOOM',zh:'双指缩放'},
+        rotate_hint:{en:'DRAG TO ROTATE',zh:'拖拽旋转查看'},
+        modal_title:{en:'ARC REACTOR CHARGED',zh:'方舟反应堆充能完成'},
+        modal_desc:{en:'CHECKOUT SUCCESSFUL - SHIPPING FROM STARK TOWER',zh:'结算成功！装备正在从斯塔克大厦发货。'},
+        modal_back:{en:'BACK TO HQ',zh:'返回大厅'},
+        modal_continue:{en:'CONTINUE',zh:'继续选购'},
+        lang_label:{en:'中',zh:'EN'},
+    };
+
+
+const currentPage=ref('home');const mobileMenuOpen=ref(false);
+    const windowWidth=ref(typeof window!=='undefined'?window.innerWidth:1024);
+    const carouselIndex=ref(0);const cart=reactive([]);const filterOpen=ref(false);
+    const showCheckoutModal=ref(false);const blindBoxAnimating=ref(false);
+    const blindBoxScanning=ref(false);const blindBoxResult=ref(null);const scanProgress=ref(0);
+    const customizeColor=ref('#39ff14');const customizeScale=ref(1);const selectedProduct=ref(null);
+    let touchStartX=0;
+    const filters=reactive({hero:'',type:'',priceRange:''});
+    onMounted(()=>{window.addEventListener('resize',()=>windowWidth.value=window.innerWidth);setInterval(()=>{if(currentPage.value==='home')carouselIndex.value=(carouselIndex.value+1)%carouselSlides.length},5000)});
+    onBeforeUnmount(()=>window.removeEventListener('resize',()=>{}));
+    const heroHeight=computed(()=>windowWidth.value<768?window.innerHeight*0.6:520);
+    const navItems=()=>[{id:'home',label:i18n.nav_home[lang.value]},{id:'products',label:i18n.nav_armory[lang.value]},{id:'blindbox',label:i18n.nav_blind[lang.value]},{id:'customize',label:i18n.nav_lab[lang.value]}];
+    const mobileTabs=()=>[{id:'home',label:i18n.nav_home[lang.value],icon:'🦾'},{id:'products',label:i18n.nav_shop[lang.value],icon:'⚔️'},{id:'cart',label:i18n.nav_cart[lang.value],icon:'⚡'},{id:'home',label:i18n.nav_my[lang.value],icon:'👤'}];
+    const carouselSlides=[
+      {icon:'🦾',title:'MARK LXXXV',desc:i18n.slide1_desc[lang.value],color:'var(--neon)',bg:'linear-gradient(135deg,#050a03,#0d1f0a)',img:'https://images.pexels.com/photos/2582937/pexels-photo-2582937.jpeg?auto=compress&cs=tinysrgb&w=1920',cta:'products',ctaText:'EXPLORE'},
+      {icon:'🛡️',title:'VIBRANIUM SHIELD',desc:i18n.slide2_desc[lang.value],color:'var(--neon)',bg:'linear-gradient(135deg,#050a03,#0a1a05)',img:'https://images.pexels.com/photos/414860/pexels-photo-414860.jpeg?auto=compress&cs=tinysrgb&w=1920',cta:'products',ctaText:'VIEW'},
+      {icon:'⚡',title:'ARC REACTOR LIMITED',desc:i18n.slide3_desc[lang.value],color:'var(--neon)',bg:'linear-gradient(135deg,#050a03,#0a1a05)',img:'https://images.pexels.com/photos/110854/pexels-photo-110854.jpeg?auto=compress&cs=tinysrgb&w=1920',cta:'blindbox',ctaText:'OPEN BOX'},
+    ];
+    const heroes=['IRON MAN','CAPTAIN AMERICA','THOR','HULK','BLACK WIDOW','HAWKEYE','SPIDER-MAN','BLACK PANTHER'];
+    const quickEntries=[
+      {icon:'🎁',title:t('quick_blind'),desc:t('quick_blind_d'),route:'blindbox'},
+      {icon:'🎨',title:t('quick_lab'),desc:t('quick_lab_d'),route:'customize'},
+      {icon:'🏆',title:t('quick_pts'),desc:t('quick_pts_d'),route:'products'},
+    ];
+    const allProducts=[
+      {id:1,icon:'🦾',name:'MARK LXXXV ARMOR',hero:'IRON MAN',type:'ARMOR',price:4999,desc:'Latest nano technology. Full body deployment in 0.5s. Enhanced ARC reactor with 300% power output.',bg:'linear-gradient(135deg,#0d1f0a,#1a2a0a)'},
+      {id:2,icon:'🛡️',name:'VIBRANIUM SHIELD',hero:'CAPTAIN AMERICA',type:'WEAPON',price:2999,desc:'Wakandan vibranium alloy. Absorbs kinetic energy. Stark Industries combat system certified.',bg:'linear-gradient(135deg,#0a0a1a,#0a1a2a)'},
+      {id:3,icon:'🔨',name:'STORMBREAKER',hero:'THOR',type:'WEAPON',price:3999,desc:'Asgardian craft. Lightning summoning. Midgard energy standard adapted by Stark Industries.',bg:'linear-gradient(135deg,#0a0a1a,#0a0a2a)'},
+      {id:4,icon:'💪',name:'HULK SMASH GAUNTLET',hero:'HULK',type:'GEAR',price:1999,desc:'Gamma energy amplifier. Custom strength control device by Stark Industries.',bg:'linear-gradient(135deg,#0a1a0a,#0a2a0a)'},
+      {id:5,icon:'🕷️',name:'NANO SUIT SPIDER',hero:'SPIDER-MAN',type:'ARMOR',price:2499,desc:'Custom by Tony Stark. Karen AI assistant. 576 web-shooting modes.',bg:'linear-gradient(135deg,#0a0a2a,#0a0a3e)'},
+      {id:6,icon:'🏹',name:'TACTICAL COMPOUND BOW',hero:'HAWKEYE',type:'WEAPON',price:1499,desc:'Compound bow with 8 special arrows. Stark Industries targeting system.',bg:'linear-gradient(135deg,#0a0a1a,#0a1a1a)'},
+      {id:7,icon:'⚡',name:'ARC REACTOR MK VIII',hero:'IRON MAN',type:'COLLECTIBLE',price:5999,desc:'1:1 scale replica with LED lighting. Palladium upgrade. Numbered certificate.',bg:'linear-gradient(135deg,#0a1420,#0a0a2e)'},
+      {id:8,icon:'🐱',name:'WIDOW STING',hero:'BLACK WIDOW',type:'WEAPON',price:1299,desc:'High-voltage electric discharge. Concealed carry. Stark Industries special ops series.',bg:'linear-gradient(135deg,#1a0a0a,#0a0a0a)'},
+    ];
+    const colors=[{name:'NEON',value:'#39ff14'},{name:'CYBER',value:'#00ff41'},{name:'PLASMA',value:'#6bff47'},{name:'MATRIX',value:'#00cc00'},{name:'MINT',value:'#00ff88'},{name:'LIME',value:'#88ff00'}];
+    const modulesData=["SHIELD","POWER","BLASTER","THRUST","NANO","SCAN"];
+    const moduleIcons=["🛡️","⚡","🔫","🚀","🦾","📡"];
+    const modules=reactive(modulesData.map((n,i)=>({icon:moduleIcons[i],name:n,selected:false})));
+    const blindBoxPool=[{icon:'🦾',name:'MARK III CLASSIC',desc:'RARE · LEGACY EDITION',price:2999},{icon:'🔱',name:'MJOLNIR REPLICA',desc:'SR · ASGARDIAN RELIC',price:4999},{icon:'🖐️',name:'INFINITY GAUNTLET',desc:'SSR · THANOS REPLICA',price:9999},{icon:'💎',name:'SPACE STONE CORE',desc:'UR · COSMIC FRAGMENT',price:19999},{icon:'🛡️',name:'VIBRANIUM SHIELD OG',desc:'RARE · ORIGINAL COLOR',price:2599},{icon:'🤖',name:'ULTRON SENTINEL',desc:'SR · DISCONTINUED',price:3999}];
+    const filteredProducts=computed(()=>allProducts.filter(p=>{
+      if(filters.hero&&p.hero!==filters.hero)return false;
+      if(filters.type&&p.type!==filters.type)return false;
+      if(filters.priceRange){const[mx]=filters.priceRange.split('-').map(Number);if(filters.priceRange.includes('+')&&p.price<parseInt(filters.priceRange))return false;const[mn,ma]=filters.priceRange.split('-');if(ma&&(p.price<parseInt(mn)||p.price>parseInt(ma)))return false;if(!ma&&p.price<parseInt(mn))return false}
+      return true;
+    }));
+    const relatedProducts=computed(()=>allProducts.filter(p=>p.id!==(selectedProduct.value?.id||0)).slice(0,6));
+    const cartTotal=computed(()=>cart.reduce((s,i)=>s+i.price*i.qty,0));
+    function navigate(p){currentPage.value=p;filterOpen.value=false;mobileMenuOpen.value=false;window.scrollTo({top:0,behavior:'smooth'})}
+    function goHome(){navigate('home')}
+    function viewProduct(p){selectedProduct.value=p;navigate('detail')}
+    function addToCart(p){const e=cart.find(i=>i.id===p.id);e?e.qty++:cart.push({...p,qty:1})}
+    function checkout(){showCheckoutModal.value=true;cart.splice(0,cart.length)}
+    function touchStart(e){touchStartX=e.touches[0].clientX}
+    function touchEnd(e){const d=touchStartX-e.changedTouches[0].clientX;if(Math.abs(d)>50)d>0?carouselIndex.value=(carouselIndex.value+1)%carouselSlides.length:carouselIndex.value=(carouselIndex.value-1+carouselSlides.length)%carouselSlides.length}
+    function rotate3d(e){const r=e.currentTarget.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;e.currentTarget.querySelector('.product-360-inner').style.transform=`rotateY(${x*30}deg) rotateX(${-y*20}deg)`}
+    function reset3d(e){e.currentTarget.querySelector('.product-360-inner').style.transform='rotateY(0deg) rotateX(0deg)'}
+    function startBlindBox(){if(blindBoxScanning.value)return;blindBoxScanning.value=true;blindBoxAnimating.value=true;blindBoxResult.value=null;scanProgress.value=0;const iv=setInterval(()=>{scanProgress.value+=Math.floor(Math.random()*15+5);if(scanProgress.value>=100){clearInterval(iv);scanProgress.value=100;setTimeout(()=>{blindBoxResult.value=blindBoxPool[Math.floor(Math.random()*blindBoxPool.length)];blindBoxScanning.value=false;blindBoxAnimating.value=false},500)}},200)}
+    return{lang,t,toggleLang,tr,currentPage,mobileMenuOpen,windowWidth,carouselIndex,cart,filterOpen,showCheckoutModal,blindBoxAnimating,blindBoxScanning,blindBoxResult,scanProgress,customizeColor,customizeScale,selectedProduct,filters,navItems,mobileTabs,heroHeight,carouselSlides,heroes,quickEntries,allProducts,filteredProducts,relatedProducts,cartTotal,colors,modules,blindBoxPool,navigate,goHome,viewProduct,addToCart,checkout,touchStart,touchEnd,rotate3d,reset3d,startBlindBox}
+  }
+});
+try{app.mount("#app");}catch(e){console.error(e)}
+// Hide all loading overlays
+['app-init','loading-fallback','app-loader'].forEach(function(id){
+  var el=document.getElementById(id);
+  if(el)el.style.display='none';
+});
+
+</script>
+<script>setTimeout(function(){var e=document.getElementById("app-init");if(e)e.style.display="none";},3000);</script>
+</body>
+</html>

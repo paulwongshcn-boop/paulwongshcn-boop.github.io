@@ -1,0 +1,817 @@
+[
+  {
+    "id": 1,
+    "title": "Captain America: The First Avenger",
+    "year": 1942,
+    "phase": 1,
+    "type": "movie",
+    "rating": 7.4,
+    "desc": "Steve Rogers becomes the first Super Soldier during WWII, taking on HYDRA and the Red Skull.",
+    "poster": "/assets/posters/cap-america-1.jpg",
+    "releaseDate": "2011-07-22",
+    "heroes": [
+      "Captain America",
+      "Bucky Barnes"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Captain Marvel",
+    "year": 1995,
+    "phase": 3,
+    "type": "movie",
+    "rating": 6.8,
+    "desc": "In the 1990s, Carol Danvers discovers her cosmic powers and confronts the Kree Empire.",
+    "poster": "/assets/posters/captain-marvel.jpg",
+    "releaseDate": "2019-03-08",
+    "heroes": [
+      "Captain Marvel",
+      "Nick Fury"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Iron Man",
+    "year": 2008,
+    "phase": 1,
+    "type": "movie",
+    "rating": 7.9,
+    "desc": "Billionaire inventor Tony Stark builds a high-tech suit of armor and becomes Iron Man.",
+    "poster": "/assets/posters/iron-man.jpg",
+    "releaseDate": "2008-05-02",
+    "heroes": [
+      "Iron Man",
+      "War Machine"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "The Incredible Hulk",
+    "year": 2008,
+    "phase": 1,
+    "type": "movie",
+    "rating": 6.6,
+    "desc": "Bruce Banner seeks a cure for his gamma-radiated condition while pursued by the military.",
+    "poster": "/assets/posters/incredible-hulk.jpg",
+    "releaseDate": "2008-06-13",
+    "heroes": [
+      "Hulk",
+      "Thunderbolt Ross"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Iron Man 2",
+    "year": 2010,
+    "phase": 1,
+    "type": "movie",
+    "rating": 6.9,
+    "desc": "Tony Stark goes public as Iron Man, facing pressure from the government and a vengeful rival.",
+    "poster": "/assets/posters/iron-man-2.jpg",
+    "releaseDate": "2010-05-07",
+    "heroes": [
+      "Iron Man",
+      "Black Widow",
+      "War Machine",
+      "Nick Fury"
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Thor",
+    "year": 2011,
+    "phase": 1,
+    "type": "movie",
+    "rating": 7,
+    "desc": "The God of Thunder is banished to Earth to learn humility and stop his brother Loki's schemes.",
+    "poster": "/assets/posters/thor-1.jpg",
+    "releaseDate": "2011-05-06",
+    "heroes": [
+      "Thor",
+      "Loki",
+      "Hawkeye"
+    ]
+  },
+  {
+    "id": 7,
+    "title": "The Avengers",
+    "year": 2012,
+    "phase": 1,
+    "type": "movie",
+    "rating": 8,
+    "desc": "Nick Fury assembles Earth's Mightiest Heroes to stop Loki and an alien invasion of New York.",
+    "poster": "/assets/posters/avengers-1.jpg",
+    "releaseDate": "2012-05-04",
+    "heroes": [
+      "Iron Man",
+      "Captain America",
+      "Thor",
+      "Hulk",
+      "Black Widow",
+      "Hawkeye",
+      "Loki",
+      "Nick Fury"
+    ]
+  },
+  {
+    "id": 8,
+    "title": "Thor: The Dark World",
+    "year": 2013,
+    "phase": 2,
+    "type": "movie",
+    "rating": 6.7,
+    "desc": "Thor teams up with a reluctant Loki to save the Nine Realms from the ancient Dark Elves.",
+    "poster": "/assets/posters/thor-2.jpg",
+    "releaseDate": "2013-11-08",
+    "heroes": [
+      "Thor",
+      "Loki"
+    ]
+  },
+  {
+    "id": 9,
+    "title": "Iron Man 3",
+    "year": 2013,
+    "phase": 2,
+    "type": "movie",
+    "rating": 7.1,
+    "desc": "Struggling with PTSD after New York, Tony faces the terrorist known as the Mandarin.",
+    "poster": "/assets/posters/iron-man-3.jpg",
+    "releaseDate": "2013-05-03",
+    "heroes": [
+      "Iron Man",
+      "War Machine"
+    ]
+  },
+  {
+    "id": 10,
+    "title": "Captain America: The Winter Soldier",
+    "year": 2014,
+    "phase": 2,
+    "type": "movie",
+    "rating": 7.7,
+    "desc": "Steve Rogers uncovers a conspiracy within S.H.I.E.L.D. and faces the mysterious Winter Soldier.",
+    "poster": "/assets/posters/cap-america-2.jpg",
+    "releaseDate": "2014-04-04",
+    "heroes": [
+      "Captain America",
+      "Black Widow",
+      "Falcon",
+      "Winter Soldier"
+    ]
+  },
+  {
+    "id": 11,
+    "title": "Guardians of the Galaxy",
+    "year": 2014,
+    "phase": 2,
+    "type": "movie",
+    "rating": 7.6,
+    "desc": "A ragtag group of misfits must protect an ancient orb from the fanatical Ronan.",
+    "poster": "/assets/posters/guardians-1.jpg",
+    "releaseDate": "2014-08-01",
+    "heroes": [
+      "Star-Lord",
+      "Gamora",
+      "Drax",
+      "Rocket",
+      "Groot",
+      "Nebula",
+      "Thanos"
+    ]
+  },
+  {
+    "id": 12,
+    "title": "Guardians of the Galaxy Vol. 2",
+    "year": 2014,
+    "phase": 3,
+    "type": "movie",
+    "rating": 7.6,
+    "desc": "The Guardians unravel the mystery of Peter Quill's parentage while facing new threats.",
+    "poster": "/assets/posters/guardians-2.jpg",
+    "releaseDate": "2017-05-05",
+    "heroes": [
+      "Star-Lord",
+      "Gamora",
+      "Drax",
+      "Rocket",
+      "Groot",
+      "Nebula",
+      "Mantis"
+    ]
+  },
+  {
+    "id": 13,
+    "title": "Avengers: Age of Ultron",
+    "year": 2015,
+    "phase": 2,
+    "type": "movie",
+    "rating": 7.3,
+    "desc": "Tony's global peacekeeping AI goes rogue, forcing the Avengers to stop Ultron's extinction plan.",
+    "poster": "/assets/posters/age-of-ultron.jpg",
+    "releaseDate": "2015-05-01",
+    "heroes": [
+      "Iron Man",
+      "Captain America",
+      "Thor",
+      "Hulk",
+      "Black Widow",
+      "Hawkeye",
+      "Scarlet Witch",
+      "Vision",
+      "War Machine",
+      "Falcon",
+      "Nick Fury"
+    ]
+  },
+  {
+    "id": 14,
+    "title": "Ant-Man",
+    "year": 2015,
+    "phase": 2,
+    "type": "movie",
+    "rating": 7.2,
+    "desc": "Thief Scott Lang gains a shrinking suit and must pull off a heist to save the day.",
+    "poster": "/assets/posters/ant-man-1.jpg",
+    "releaseDate": "2015-07-17",
+    "heroes": [
+      "Ant-Man",
+      "Scott Lang"
+    ]
+  },
+  {
+    "id": 15,
+    "title": "Captain America: Civil War",
+    "year": 2016,
+    "phase": 3,
+    "type": "movie",
+    "rating": 7.8,
+    "desc": "The Avengers split into factions over government oversight, leading to an epic confrontation.",
+    "poster": "/assets/posters/civil-war.jpg",
+    "releaseDate": "2016-05-06",
+    "heroes": [
+      "Iron Man",
+      "Captain America",
+      "Black Widow",
+      "Spider-Man",
+      "Black Panther",
+      "Scarlet Witch",
+      "Vision",
+      "Ant-Man",
+      "Falcon",
+      "Winter Soldier",
+      "War Machine",
+      "Hawkeye"
+    ]
+  },
+  {
+    "id": 16,
+    "title": "Black Widow",
+    "year": 2016,
+    "phase": 4,
+    "type": "movie",
+    "rating": 6.7,
+    "desc": "Natasha Romanoff confronts her past and the Red Room program that made her a spy.",
+    "poster": "/assets/posters/black-widow.jpg",
+    "releaseDate": "2021-07-09",
+    "heroes": [
+      "Black Widow"
+    ]
+  },
+  {
+    "id": 17,
+    "title": "Black Panther",
+    "year": 2017,
+    "phase": 3,
+    "type": "movie",
+    "rating": 7.3,
+    "desc": "T'Challa returns as king of Wakanda and must defend his nation from a hidden adversary.",
+    "poster": "/assets/posters/black-panther-1.jpg",
+    "releaseDate": "2018-02-16",
+    "heroes": [
+      "Black Panther",
+      "Shuri"
+    ]
+  },
+  {
+    "id": 18,
+    "title": "Spider-Man: Homecoming",
+    "year": 2016,
+    "phase": 3,
+    "type": "movie",
+    "rating": 7.4,
+    "desc": "Young Peter Parker juggles high school and superhero life under Tony Stark's mentorship.",
+    "poster": "/assets/posters/spider-man-homecoming.jpg",
+    "releaseDate": "2017-07-07",
+    "heroes": [
+      "Spider-Man",
+      "Iron Man"
+    ]
+  },
+  {
+    "id": 19,
+    "title": "Doctor Strange",
+    "year": 2016,
+    "phase": 3,
+    "type": "movie",
+    "rating": 7.5,
+    "desc": "Brilliant surgeon Stephen Strange discovers the mystic arts after a career-ending accident.",
+    "poster": "/assets/posters/doctor-strange-1.jpg",
+    "releaseDate": "2016-11-04",
+    "heroes": [
+      "Doctor Strange",
+      "Wong"
+    ]
+  },
+  {
+    "id": 20,
+    "title": "Thor: Ragnarok",
+    "year": 2017,
+    "phase": 3,
+    "type": "movie",
+    "rating": 7.9,
+    "desc": "Thor must survive the destruction of Asgard and defeat his evil sister Hela.",
+    "poster": "/assets/posters/thor-ragnarok.jpg",
+    "releaseDate": "2017-11-03",
+    "heroes": [
+      "Thor",
+      "Hulk",
+      "Loki"
+    ]
+  },
+  {
+    "id": 21,
+    "title": "Ant-Man and the Wasp",
+    "year": 2018,
+    "phase": 3,
+    "type": "movie",
+    "rating": 7,
+    "desc": "Scott Lang partners with Hope van Dyne as the Wasp on a mission from the Quantum Realm.",
+    "poster": "/assets/posters/ant-man-and-wasp.jpg",
+    "releaseDate": "2018-07-06",
+    "heroes": [
+      "Ant-Man",
+      "Wasp",
+      "Scott Lang"
+    ]
+  },
+  {
+    "id": 22,
+    "title": "Avengers: Infinity War",
+    "year": 2018,
+    "phase": 3,
+    "type": "movie",
+    "rating": 8.4,
+    "desc": "Thanos sets out to collect all six Infinity Stones, threatening half of all life in the universe.",
+    "poster": "/assets/posters/infinity-war.jpg",
+    "releaseDate": "2018-04-27",
+    "heroes": [
+      "Iron Man",
+      "Captain America",
+      "Thor",
+      "Hulk",
+      "Black Widow",
+      "Spider-Man",
+      "Doctor Strange",
+      "Star-Lord",
+      "Gamora",
+      "Drax",
+      "Rocket",
+      "Groot",
+      "Nebula",
+      "Mantis",
+      "Scarlet Witch",
+      "Vision",
+      "Black Panther",
+      "Falcon",
+      "Winter Soldier",
+      "War Machine",
+      "Loki",
+      "Thanos"
+    ]
+  },
+  {
+    "id": 23,
+    "title": "Avengers: Endgame",
+    "year": 2023,
+    "phase": 3,
+    "type": "movie",
+    "rating": 8.4,
+    "desc": "The surviving Avengers travel through time to undo Thanos's snap and save the universe.",
+    "poster": "/assets/posters/endgame.jpg",
+    "releaseDate": "2019-04-26",
+    "heroes": [
+      "Iron Man",
+      "Captain America",
+      "Thor",
+      "Hulk",
+      "Black Widow",
+      "Hawkeye",
+      "Spider-Man",
+      "Doctor Strange",
+      "Captain Marvel",
+      "Star-Lord",
+      "Gamora",
+      "Rocket",
+      "Nebula",
+      "Mantis",
+      "Ant-Man",
+      "Falcon",
+      "War Machine",
+      "Rocket",
+      "Thanos"
+    ]
+  },
+  {
+    "id": 24,
+    "title": "Spider-Man: Far From Home",
+    "year": 2024,
+    "phase": 3,
+    "type": "movie",
+    "rating": 7.4,
+    "desc": "Peter Parker faces elemental threats and a mysterious new hero during a school trip to Europe.",
+    "poster": "/assets/posters/far-from-home.jpg",
+    "releaseDate": "2019-07-02",
+    "heroes": [
+      "Spider-Man",
+      "Nick Fury"
+    ]
+  },
+  {
+    "id": 25,
+    "title": "Spider-Man: No Way Home",
+    "year": 2024,
+    "phase": 4,
+    "type": "movie",
+    "rating": 8.2,
+    "desc": "Peter's identity is revealed, forcing him to seek Doctor Strange's help with universe-altering consequences.",
+    "poster": "/assets/posters/no-way-home.jpg",
+    "releaseDate": "2021-12-17",
+    "heroes": [
+      "Spider-Man",
+      "Doctor Strange",
+      "Wong"
+    ]
+  },
+  {
+    "id": 26,
+    "title": "Doctor Strange in the Multiverse of Madness",
+    "year": 2024,
+    "phase": 4,
+    "type": "movie",
+    "rating": 6.9,
+    "desc": "Stephen Strange navigate collapsing realities with America Chavez to save the multiverse.",
+    "poster": "/assets/posters/doctor-strange-2.jpg",
+    "releaseDate": "2022-05-06",
+    "heroes": [
+      "Doctor Strange",
+      "Scarlet Witch",
+      "Wong"
+    ]
+  },
+  {
+    "id": 27,
+    "title": "Black Panther: Wakanda Forever",
+    "year": 2024,
+    "phase": 4,
+    "type": "movie",
+    "rating": 6.8,
+    "desc": "Wakanda fights to protect its legacy after the loss of King T'Challa.",
+    "poster": "/assets/posters/wakanda-forever.jpg",
+    "releaseDate": "2022-11-11",
+    "heroes": [
+      "Black Panther",
+      "Shuri"
+    ]
+  },
+  {
+    "id": 28,
+    "title": "Ant-Man and the Wasp: Quantumania",
+    "year": 2025,
+    "phase": 5,
+    "type": "movie",
+    "rating": 6,
+    "desc": "Scott and Hope are pulled into the Quantum Realm, facing the formidable Kang the Conqueror.",
+    "poster": "/assets/posters/quantumania.jpg",
+    "releaseDate": "2023-02-17",
+    "heroes": [
+      "Ant-Man",
+      "Scott Lang",
+      "Wasp"
+    ]
+  },
+  {
+    "id": 29,
+    "title": "Guardians of the Galaxy Vol. 3",
+    "year": 2025,
+    "phase": 5,
+    "type": "movie",
+    "rating": 7.9,
+    "desc": "The Guardians embark on one last mission to save Rocket Racoon and find their closure.",
+    "poster": "/assets/posters/guardians-3.jpg",
+    "releaseDate": "2023-05-05",
+    "heroes": [
+      "Star-Lord",
+      "Gamora",
+      "Drax",
+      "Rocket",
+      "Groot",
+      "Nebula",
+      "Mantis"
+    ]
+  },
+  {
+    "id": 30,
+    "title": "The Marvels",
+    "year": 2025,
+    "phase": 5,
+    "type": "movie",
+    "rating": 5.9,
+    "desc": "Carol Danvers, Kamala Khan, and Monica Rambeau team up when their powers become entangled.",
+    "poster": "/assets/posters/the-marvels.jpg",
+    "releaseDate": "2023-11-10",
+    "heroes": [
+      "Captain Marvel",
+      "Ms. Marvel"
+    ]
+  },
+  {
+    "id": 31,
+    "title": "Deadpool & Wolverine",
+    "year": 2024,
+    "phase": 5,
+    "type": "movie",
+    "rating": 7.8,
+    "desc": "The Merc with a Mouth teams up with Wolverine for a chaotic multiversal adventure.",
+    "poster": "/assets/posters/deadpool-wolverine.jpg",
+    "releaseDate": "2024-07-26",
+    "heroes": [
+      "Deadpool",
+      "Wolverine"
+    ]
+  },
+  {
+    "id": 32,
+    "title": "Captain America: Brave New World",
+    "year": 2025,
+    "phase": 5,
+    "type": "movie",
+    "rating": null,
+    "desc": "Sam Wilson takes up the shield and faces a global conspiracy.",
+    "poster": "/assets/posters/brave-new-world.jpg",
+    "releaseDate": "2025-02-14",
+    "heroes": [
+      "Captain America",
+      "Falcon"
+    ]
+  },
+  {
+    "id": 33,
+    "title": "Thunderbolts*",
+    "year": 2025,
+    "phase": 5,
+    "type": "movie",
+    "rating": null,
+    "desc": "A team of anti-heroes and reformed villains is assembled for covert missions.",
+    "poster": "/assets/posters/thunderbolts.jpg",
+    "releaseDate": "2025-05-02",
+    "heroes": [
+      "Black Widow",
+      "Winter Soldier",
+      "Bucky Barnes"
+    ]
+  },
+  {
+    "id": 34,
+    "title": "The Fantastic Four",
+    "year": 2025,
+    "phase": 6,
+    "type": "movie",
+    "rating": null,
+    "desc": "Marvel's First Family enters the MCU in a retro-futuristic adventure.",
+    "poster": "/assets/posters/fantastic-four.jpg",
+    "releaseDate": "2025-07-25",
+    "heroes": [
+      "Mr. Fantastic",
+      "Invisible Woman",
+      "Human Torch",
+      "The Thing"
+    ]
+  },
+  {
+    "id": 35,
+    "title": "WandaVision",
+    "year": 2023,
+    "phase": 4,
+    "type": "series",
+    "rating": 7.9,
+    "desc": "Wanda Maximoff lives in a sitcom reality that slowly unravels into grief and chaos.",
+    "poster": "/assets/posters/wandavision.jpg",
+    "heroes": [
+      "Scarlet Witch",
+      "Vision",
+      "Agatha Harkness"
+    ]
+  },
+  {
+    "id": 36,
+    "title": "The Falcon and the Winter Soldier",
+    "year": 2024,
+    "phase": 4,
+    "type": "series",
+    "rating": 7.2,
+    "desc": "Sam Wilson and Bucky Barnes grapple with legacy as a new Captain America emerges.",
+    "poster": "/assets/posters/falcon-winter-soldier.jpg",
+    "heroes": [
+      "Falcon",
+      "Winter Soldier"
+    ]
+  },
+  {
+    "id": 37,
+    "title": "Loki S1",
+    "year": 2012,
+    "phase": 4,
+    "type": "series",
+    "rating": 8.2,
+    "desc": "The God of Mischief steps outside time to fix the fractured timeline at the TVA.",
+    "poster": "/assets/posters/loki-s1.jpg",
+    "heroes": [
+      "Loki"
+    ]
+  },
+  {
+    "id": 38,
+    "title": "What If...? S1",
+    "year": 2024,
+    "phase": 4,
+    "type": "series",
+    "rating": 7.4,
+    "desc": "The Watcher peers into alternate realities where key MCU moments unfold differently.",
+    "poster": "/assets/posters/what-if-s1.jpg",
+    "heroes": [
+      "Doctor Strange",
+      "Groot",
+      "Scarlet Witch",
+      "Captain Carter",
+      "Loki"
+    ]
+  },
+  {
+    "id": 39,
+    "title": "Hawkeye",
+    "year": 2024,
+    "phase": 4,
+    "type": "series",
+    "rating": 7.5,
+    "desc": "Clint Barton trains a young archer named Kate Bishop during the holiday season in New York.",
+    "poster": "/assets/posters/hawkeye.jpg",
+    "heroes": [
+      "Hawkeye",
+      "Echo",
+      "Kate Bishop"
+    ]
+  },
+  {
+    "id": 40,
+    "title": "Moon Knight",
+    "year": 2024,
+    "phase": 4,
+    "type": "series",
+    "rating": 7.3,
+    "desc": "Steven Grant navigates dissociative identity disorder while channeling an Egyptian god.",
+    "poster": "/assets/posters/moon-knight.jpg",
+    "heroes": [
+      "Moon Knight",
+      "Khonshu"
+    ]
+  },
+  {
+    "id": 41,
+    "title": "Ms. Marvel",
+    "year": 2024,
+    "phase": 4,
+    "type": "series",
+    "rating": 6.2,
+    "desc": "Teen Kamala Khan discovers her cosmic powers and her Pakistani heritage.",
+    "poster": "/assets/posters/ms-marvel.jpg",
+    "heroes": [
+      "Ms. Marvel"
+    ]
+  },
+  {
+    "id": 42,
+    "title": "She-Hulk: Attorney at Law",
+    "year": 2024,
+    "phase": 4,
+    "type": "series",
+    "rating": 5.2,
+    "desc": "Lawyer Jennifer Walters must balance her career with her new life as a green powerhouse.",
+    "poster": "/assets/posters/she-hulk.jpg",
+    "heroes": [
+      "She-Hulk",
+      "Hulk",
+      "Wong",
+      "Daredevil"
+    ]
+  },
+  {
+    "id": 43,
+    "title": "Secret Invasion",
+    "year": 2025,
+    "phase": 5,
+    "type": "series",
+    "rating": 5.9,
+    "desc": "Nick Fury uncovers a shapeshifting Skrull infiltration at the highest levels of Earth.",
+    "poster": "/assets/posters/secret-invasion.jpg",
+    "heroes": [
+      "Nick Fury",
+      "Talos"
+    ]
+  },
+  {
+    "id": 44,
+    "title": "Loki S2",
+    "year": 2012,
+    "phase": 5,
+    "type": "series",
+    "rating": 8,
+    "desc": "Loki continues his multiversal journey with the TVA, battling the branching timeline.",
+    "poster": "/assets/posters/loki-s2.jpg",
+    "heroes": [
+      "Loki"
+    ]
+  },
+  {
+    "id": 45,
+    "title": "What If...? S2",
+    "year": 2025,
+    "phase": 5,
+    "type": "series",
+    "rating": 7.1,
+    "desc": "The Watcher returns with more alternate universe explorations in the multiverse.",
+    "poster": "/assets/posters/what-if-s2.jpg",
+    "heroes": [
+      "Captain Carter",
+      "Kahhori",
+      "Storm"
+    ]
+  },
+  {
+    "id": 46,
+    "title": "Echo",
+    "year": 2025,
+    "phase": 5,
+    "type": "series",
+    "rating": 6.3,
+    "desc": "Maya Lopez returns to her roots while confronting her past with Wilson Fisk.",
+    "poster": "/assets/posters/echo.jpg",
+    "heroes": [
+      "Echo",
+      "Daredevil"
+    ]
+  },
+  {
+    "id": 47,
+    "title": "Agatha All Along",
+    "year": 2025,
+    "phase": 5,
+    "type": "series",
+    "rating": 7.1,
+    "desc": "The witch Agatha Harkness escapes her spell and seeks the fabled Witches' Road.",
+    "poster": "/assets/posters/agatha-all-along.jpg",
+    "heroes": [
+      "Agatha Harkness",
+      "Wiccan",
+      "Rio Vidal"
+    ]
+  },
+  {
+    "id": 48,
+    "title": "Daredevil: Born Again S1",
+    "year": 2025,
+    "phase": 5,
+    "type": "series",
+    "rating": null,
+    "desc": "Matt Murdock returns as the Man Without Fear in a new chapter of vigilante justice.",
+    "poster": "/assets/posters/daredevil-born-again.jpg",
+    "heroes": [
+      "Daredevil",
+      "Matt Murdock"
+    ]
+  },
+  {
+    "id": 49,
+    "title": "Ironheart",
+    "year": 2025,
+    "phase": 5,
+    "type": "series",
+    "rating": null,
+    "desc": "Genius inventor Riri Williams takes on the mantle of Ironheart with her own armor.",
+    "poster": "/assets/posters/ironheart.jpg",
+    "heroes": [
+      "Ironheart",
+      "Riri Williams"
+    ]
+  }
+]

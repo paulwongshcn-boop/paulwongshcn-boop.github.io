@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>STARKVERSE — CMS Control Panel</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--neon:#39ff14;--n2:#00ff88;--bg:#050a03;--bg2:#0a1408;--card:rgba(5,10,3,0.92);--bdr:rgba(57,255,20,0.15);--bdr2:rgba(57,255,20,0.35);--txt:#ccffc0;--dim:#4a8a40;--red:#ff6b6b;--yellow:#ffd93d}
+html{scroll-behavior:smooth}
+body{font-family:"Segoe UI","Poppins",Arial,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+::selection{background:var(--neon);color:#000}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--neon);border-radius:3px}
+body::after{content:"";position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(57,255,20,0.03) 2px,rgba(57,255,20,0.03) 4px)}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 5px var(--neon),0 0 10px rgba(57,255,20,0.3)}50%{box-shadow:0 0 15px var(--neon),0 0 30px rgba(57,255,20,0.5)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Login */
+.login-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-box{background:var(--card);border:1px solid var(--bdr2);border-radius:12px;padding:40px;width:100%;max-width:400px;animation:slideIn 0.5s ease;box-shadow:0 0 30px rgba(57,255,20,0.08)}
+.login-box h1{text-align:center;font-size:1.5rem;letter-spacing:4px;color:var(--neon);margin-bottom:6px;text-shadow:0 0 10px rgba(57,255,20,0.4)}
+.login-box h2{text-align:center;font-size:0.75rem;color:var(--dim);margin-bottom:28px;letter-spacing:2px}
+.login-box label{display:block;font-size:0.7rem;color:var(--neon);letter-spacing:2px;margin-bottom:6px;text-transform:uppercase}
+.login-box input{width:100%;padding:12px 14px;background:var(--bg2);border:1px solid var(--bdr);border-radius:6px;color:var(--txt);font-family:monospace;font-size:0.9rem;outline:none;transition:border-color 0.3s}
+.login-box input:focus{border-color:var(--neon);box-shadow:0 0 10px rgba(57,255,20,0.15)}
+.login-box button{width:100%;margin-top:20px;padding:12px;background:transparent;border:1px solid var(--neon);border-radius:6px;color:var(--neon);font-size:0.85rem;font-weight:700;letter-spacing:3px;cursor:pointer;transition:all 0.3s}
+.login-box button:hover{background:rgba(57,255,20,0.1);box-shadow:0 0 15px rgba(57,255,20,0.2)}
+.login-error{color:var(--red);font-size:0.75rem;text-align:center;margin-top:12px}
+
+/* Layout */
+.cms-header{background:var(--card);border-bottom:1px solid var(--bdr);padding:14px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.cms-header h1{font-size:1rem;color:var(--neon);letter-spacing:3px;text-shadow:0 0 8px rgba(57,255,20,0.3)}
+.cms-header .user-info{display:flex;align-items:center;gap:14px;font-size:0.75rem;color:var(--dim)}
+.cms-header .logout-btn{padding:6px 14px;background:transparent;border:1px solid var(--bdr);border-radius:4px;color:var(--dim);font-size:0.7rem;cursor:pointer;transition:all 0.3s;letter-spacing:1px}
+.cms-header .logout-btn:hover{border-color:var(--red);color:var(--red)}
+
+.cms-content{max-width:1200px;margin:0 auto;padding:24px}
+
+/* Dashboard Cards */
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:28px}
+.dash-card{background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:18px;text-align:center;animation:fadeIn 0.5s ease;transition:all 0.3s}
+.dash-card:hover{border-color:var(--bdr2);box-shadow:0 0 15px rgba(57,255,20,0.05)}
+.dash-card .dash-icon{font-size:1.5rem;margin-bottom:6px}
+.dash-card .dash-value{font-size:1.8rem;font-weight:700;color:var(--neon);text-shadow:0 0 10px rgba(57,255,20,0.3);letter-spacing:2px;font-family:monospace}
+.dash-card .dash-label{font-size:0.65rem;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+
+/* Filters */
+.filter-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.filter-bar input{flex:1;min-width:200px;padding:10px 14px;background:var(--bg2);border:1px solid var(--bdr);border-radius:6px;color:var(--txt);font-size:0.8rem;outline:none;transition:border-color 0.3s}
+.filter-bar input:focus{border-color:var(--neon)}
+.filter-bar select{padding:10px 12px;background:var(--bg2);border:1px solid var(--bdr);border-radius:6px;color:var(--txt);font-size:0.8rem;outline:none;cursor:pointer}
+
+/* Table */
+.table-wrap{overflow-x:auto;border:1px solid var(--bdr);border-radius:8px;background:var(--card)}
+table{width:100%;border-collapse:collapse;font-size:0.78rem}
+thead{background:var(--bg2)}
+th{padding:12px 10px;text-align:left;color:var(--neon);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid var(--bdr);white-space:nowrap}
+td{padding:10px;border-bottom:1px solid rgba(57,255,20,0.05);vertical-align:middle}
+tr:hover td{background:rgba(57,255,20,0.03)}
+.type-movie{color:var(--neon);font-weight:600}
+.type-series{color:var(--yellow);font-weight:600}
+.phase-badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.65rem;font-weight:700;letter-spacing:1px}
+.phase-badge.p1{background:rgba(255,107,107,0.15);color:#ff6b6b}
+.phase-badge.p2{background:rgba(255,217,61,0.15);color:#ffd93d}
+.phase-badge.p3{background:rgba(107,203,255,0.15);color:#6bcbff}
+.phase-badge.p4{background:rgba(192,132,252,0.15);color:#c084fc}
+.phase-badge.p5{background:rgba(251,146,60,0.15);color:#fb923c}
+.phase-badge.p6{background:rgba(244,114,182,0.15);color:#f472b6}
+
+.actions{display:flex;gap:6px}
+.actions button{padding:5px 12px;background:transparent;border:1px solid var(--bdr);border-radius:4px;color:var(--txt);font-size:0.7rem;cursor:pointer;transition:all 0.3s;letter-spacing:1px}
+.actions button.edt:hover{border-color:var(--neon);color:var(--neon);box-shadow:0 0 8px rgba(57,255,20,0.15)}
+
+/* Modal Overlay */
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(4px);animation:fadeIn 0.2s ease}
+.modal-box{background:var(--card);border:1px solid var(--bdr2);border-radius:12px;padding:28px;width:90%;max-width:600px;max-height:85vh;overflow-y:auto;box-shadow:0 0 40px rgba(57,255,20,0.08);animation:slideIn 0.25s ease;position:relative}
+.modal-box h3{color:var(--neon);font-size:0.9rem;letter-spacing:2px;margin-bottom:20px;text-shadow:0 0 8px rgba(57,255,20,0.3)}
+.modal-box .close-btn{position:absolute;top:12px;right:16px;background:transparent;border:none;color:var(--dim);font-size:1.2rem;cursor:pointer;transition:color 0.3s}
+.modal-box .close-btn:hover{color:var(--neon)}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:0.65rem;color:var(--neon);letter-spacing:2px;margin-bottom:5px;text-transform:uppercase}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;background:var(--bg2);border:1px solid var(--bdr);border-radius:6px;color:var(--txt);font-size:0.8rem;outline:none;transition:border-color 0.3s;font-family:inherit}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--neon);box-shadow:0 0 10px rgba(57,255,20,0.1)}
+.form-group textarea{min-height:80px;resize:vertical}
+.form-group .poster-preview{margin-top:8px;width:100px;height:56px;border-radius:4px;object-fit:cover;border:1px solid var(--bdr)}
+.form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--bdr)}
+.form-actions button{padding:10px 24px;background:transparent;border:1px solid var(--bdr);border-radius:6px;color:var(--txt);font-size:0.78rem;cursor:pointer;transition:all 0.3s;letter-spacing:2px;font-weight:600}
+.form-actions button.save{border-color:var(--neon);color:var(--neon)}
+.form-actions button.save:hover{background:rgba(57,255,20,0.1);box-shadow:0 0 15px rgba(57,255,20,0.2)}
+.form-actions button.cancel:hover{border-color:var(--dim);color:var(--dim)}
+
+/* Toast */
+.toast{position:fixed;top:20px;right:20px;padding:12px 24px;border-radius:6px;font-size:0.8rem;z-index:10000;animation:fadeIn 0.3s ease;border:1px solid;letter-spacing:1px;backdrop-filter:blur(10px)}
+.toast.success{background:rgba(57,255,20,0.1);border-color:var(--neon);color:var(--neon);box-shadow:0 0 15px rgba(57,255,20,0.15)}
+.toast.error{background:rgba(255,107,107,0.1);border-color:var(--red);color:var(--red)}
+
+/* Empty / Loading */
+.empty-state{text-align:center;padding:48px 20px;color:var(--dim);font-size:0.85rem;letter-spacing:1px}
+.spinner{display:inline-block;width:24px;height:24px;border:2px solid var(--bdr);border-top-color:var(--neon);border-radius:50%;animation:spin 0.6s linear infinite}
+.loading-wrap{text-align:center;padding:60px;color:var(--dim);font-size:0.8rem;letter-spacing:2px}
+.count-badge{display:inline-block;background:rgba(57,255,20,0.1);border:1px solid var(--bdr);border-radius:4px;padding:3px 10px;font-size:0.7rem;color:var(--dim);letter-spacing:1px}
+
+/* Responsive */
+@media(max-width:768px){
+  .dash-grid{grid-template-columns:repeat(2,1fr)}
+  .cms-header{padding:12px 16px}
+  .cms-header h1{font-size:0.8rem}
+  .cms-content{padding:16px}
+  .modal-box{padding:20px;width:95%}
+  .login-box{padding:30px 24px}
+}
+</style>
+</head>
+<body>
+<div id="app" v-cloak>
+  <!-- LOGIN -->
+  <div class="login-wrap" v-if="!token">
+    <div class="login-box">
+      <h1>⚡ STARKVERSE</h1>
+      <h2>CMS CONTROL PANEL</h2>
+      <label>Admin Token</label>
+      <input v-model="loginToken" type="password" placeholder="Enter admin token..." @keyup.enter="doLogin" autofocus>
+      <button @click="doLogin">AUTHENTICATE</button>
+      <div class="login-error" v-if="loginError">{{ loginError }}</div>
+    </div>
+  </div>
+
+  <!-- CMS -->
+  <template v-else>
+    <div class="cms-header">
+      <h1>⚡ STARKVERSE CMS</h1>
+      <div class="user-info">
+        <span>🔒 Authenticated</span>
+        <button class="logout-btn" @click="logout">LOGOUT</button>
+      </div>
+    </div>
+
+    <div class="cms-content">
+      <!-- Dashboard -->
+      <div class="dash-grid">
+        <div class="dash-card" style="animation-delay:0s"><div class="dash-icon">🎬</div><div class="dash-value">{{ stats.movies }}</div><div class="dash-label">Films</div></div>
+        <div class="dash-card" style="animation-delay:0.1s"><div class="dash-icon">📺</div><div class="dash-value">{{ stats.series }}</div><div class="dash-label">Series</div></div>
+        <div class="dash-card" style="animation-delay:0.2s"><div class="dash-icon">🏆</div><div class="dash-value">{{ stats.highestRating || '—' }}</div><div class="dash-label">Highest Rating</div></div>
+        <div class="dash-card" style="animation-delay:0.3s"><div class="dash-icon">⭐</div><div class="dash-value">{{ stats.avgRating || '—' }}</div><div class="dash-label">Avg Rating</div></div>
+        <div class="dash-card" style="animation-delay:0.4s"><div class="dash-icon">📅</div><div class="dash-value">{{ stats.phases }}</div><div class="dash-label">Phases</div></div>
+        <div class="dash-card" style="animation-delay:0.5s"><div class="dash-icon">📂</div><div class="dash-value">{{ items.length }}</div><div class="dash-label">Total Entries</div></div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-bar">
+        <input v-model="searchQuery" placeholder="🔍 Search by title, description..." @input="page=1">
+        <select v-model="phaseFilter" @change="page=1">
+          <option value="">All Phases</option>
+          <option v-for="p in 6" :key="p" :value="p">Phase {{ p }}</option>
+        </select>
+        <select v-model="typeFilter" @change="page=1">
+          <option value="">All Types</option>
+          <option value="movie">🎬 Movie</option>
+          <option value="series">📺 Series</option>
+        </select>
+        <span class="count-badge">Showing {{ filteredItems.length }} entries</span>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap">
+        <div class="loading-wrap" v-if="loading">
+          <div class="spinner"></div>
+          <div style="margin-top:12px">Loading data...</div>
+        </div>
+        <table v-else>
+          <thead>
+            <tr><th>ID</th><th>Title</th><th>Year</th><th>Type</th><th>Phase</th><th>Rating</th><th style="width:100px">Actions</th></tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in pagedItems" :key="item.id">
+              <td style="color:var(--dim);font-family:monospace">#{{ item.id }}</td>
+              <td><strong>{{ item.title }}</strong></td>
+              <td>{{ item.year }}</td>
+              <td><span :class="'type-'+item.type">{{ item.type==='movie'?'🎬 Movie':'📺 Series' }}</span></td>
+              <td><span class="phase-badge" :class="'p'+item.phase">P{{ item.phase }}</span></td>
+              <td><span v-if="item.rating" style="color:var(--yellow)">⭐ {{ item.rating }}</span><span v-else style="color:var(--dim);font-size:0.65rem">—</span></td>
+              <td><div class="actions"><button class="edt" @click="openEdit(item)">Edit</button></div></td>
+            </tr>
+            <tr v-if="pagedItems.length===0">
+              <td colspan="7"><div class="empty-state">No entries match current filters.</div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div style="display:flex;justify-content:center;gap:8px;margin-top:16px" v-if="totalPages>1">
+        <button @click="prevPage" :disabled="page===1" style="padding:8px 16px;background:var(--bg2);border:1px solid var(--bdr);border-radius:4px;color:var(--txt);cursor:pointer;font-size:0.75rem">◀ Prev</button>
+        <span style="padding:8px 12px;color:var(--dim);font-size:0.75rem;letter-spacing:1px">{{ page }} / {{ totalPages }}</span>
+        <button @click="nextPage" :disabled="page===totalPages" style="padding:8px 16px;background:var(--bg2);border:1px solid var(--bdr);border-radius:4px;color:var(--txt);cursor:pointer;font-size:0.75rem">Next ▶</button>
+      </div>
+
+      <!-- Edit Modal -->
+      <div class="modal-overlay" v-if="editing" @click.self="editing=null">
+        <div class="modal-box">
+          <button class="close-btn" @click="editing=null">✕</button>
+          <h3>✏️ EDIT ENTRY #{{ editForm.id }}</h3>
+          <div class="form-group">
+            <label>Title</label>
+            <input v-model="editForm.title">
+          </div>
+          <div class="form-group">
+            <label>Year</label>
+            <input v-model.number="editForm.year" type="number">
+          </div>
+          <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div><label>Type</label><select v-model="editForm.type"><option value="movie">🎬 Movie</option><option value="series">📺 Series</option></select></div>
+            <div><label>Phase</label><select v-model.number="editForm.phase"><option v-for="p in 6" :key="p" :value="p">Phase {{ p }}</option></select></div>
+          </div>
+          <div class="form-group">
+            <label>Rating (0-10, leave empty for unrated)</label>
+            <input v-model="editForm.ratingStr" type="number" step="0.1" min="0" max="10" placeholder="e.g. 7.5">
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea v-model="editForm.desc"></textarea>
+          </div>
+          <div class="form-group" v-if="editForm.type==='movie'">
+            <label>Release Date</label>
+            <input v-model="editForm.releaseDate" type="date">
+          </div>
+          <div class="form-group">
+            <label>Poster</label>
+            <select v-model="editForm.poster" style="margin-bottom:8px">
+              <option value="">None</option>
+              <option v-for="p in posters" :key="p" :value="'/assets/posters/'+p">{{ p }}</option>
+            </select>
+            <div v-if="editForm.poster">
+              <img :src="editForm.poster" class="poster-preview" @error="$event.target.style.display='none'">
+              <span style="font-size:0.65rem;color:var(--dim);margin-left:8px">{{ editForm.poster }}</span>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="cancel" @click="editing=null">CANCEL</button>
+            <button class="save" @click="saveEdit" :disabled="saving">{{ saving ? 'SAVING...' : '💾 SAVE' }}</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast -->
+      <div class="toast" :class="toast.type" v-if="toast.show" @click="toast.show=false">{{ toast.message }}</div>
+    </div>
+  </template>
+</div>
+
+<script>
+const {createApp,ref,computed,onMounted} = Vue;
+
+createApp({
+  setup() {
+    const token = ref(localStorage.getItem('cms_token') || '');
+    const loginToken = ref('');
+    const loginError = ref('');
+    const items = ref([]);
+    const loading = ref(true);
+    const searchQuery = ref('');
+    const phaseFilter = ref('');
+    const typeFilter = ref('');
+    const page = ref(1);
+    const perPage = 15;
+    const editing = ref(null);
+    const editingActive = ref(false);
+    const saving = ref(false);
+    const toast = ref({show:false,message:'',type:'success'});
+    const posters = ref([]);
+    const editForm = ref({id:0,title:'',year:2025,type:'movie',phase:1,rating:null,ratingStr:'',desc:'',poster:'',releaseDate:''});
+
+    function showToast(msg, type) {
+      toast.value = {show:true,message:msg,type:type||'success'};
+      setTimeout(function(){toast.value.show=false}, 3000);
+    }
+
+    const stats = computed(function() {
+      var m = 0, s = 0, withR = [];
+      items.value.forEach(function(e) {
+        if (e.type==='movie') m++;
+        else if (e.type==='series') s++;
+        if (e.rating!==null && e.rating!==undefined) withR.push(e.rating);
+      });
+      var maxR = withR.length ? Math.max.apply(null, withR) : null;
+      var avgR = withR.length ? (withR.reduce(function(a,b){return a+b},0)/withR.length).toFixed(1) : null;
+      var phases = new Set(items.value.map(function(e){return e.phase})).size;
+      return {movies:m, series:s, highestRating:maxR, avgRating:avgR, phases:phases};
+    });
+
+    const filteredItems = computed(function() {
+      var list = items.value;
+      var q = searchQuery.value.toLowerCase().trim();
+      if (q) list = list.filter(function(e){return e.title.toLowerCase().includes(q)||e.desc.toLowerCase().includes(q)});
+      if (phaseFilter.value) list = list.filter(function(e){return e.phase===Number(phaseFilter.value)});
+      if (typeFilter.value) list = list.filter(function(e){return e.type===typeFilter.value});
+      return list;
+    });
+
+    const totalPages = computed(function() {
+      return Math.max(1, Math.ceil(filteredItems.value.length / perPage));
+    });
+
+    const pagedItems = computed(function() {
+      var start = (page.value-1)*perPage;
+      return filteredItems.value.slice(start, start+perPage);
+    });
+
+    function prevPage() {if (page.value>1) page.value--}
+    function nextPage() {if (page.value<totalPages.value) page.value++}
+
+    function doLogin() {
+      if (!loginToken.value) {loginError.value='Please enter a token.';return}
+      var h = new Headers();
+      h.append('Authorization','Bearer '+loginToken.value);
+      fetch('/api/auth',{headers:h})
+        .then(function(r){return r.json()})
+        .then(function(d){
+          if (d.authenticated) {
+            token.value=loginToken.value;
+            localStorage.setItem('cms_token',loginToken.value);
+            loginError.value='';
+            loadData();
+          } else {
+            loginError.value='Invalid token. Access denied.';
+          }
+        })
+        .catch(function(){loginError.value='Connection error.'});
+    }
+
+    function logout() {
+      token.value='';
+      localStorage.removeItem('cms_token');
+    }
+
+    function loadData() {
+      loading.value=true;
+      fetch('/api/data')
+        .then(function(r){return r.json()})
+        .then(function(d){items.value=d;loading.value=false})
+        .catch(function(){loading.value=false;showToast('Failed to load data','error')});
+      fetch('/api/posters')
+        .then(function(r){return r.json()})
+        .then(function(d){posters.value=d})
+        .catch(function(){});
+    }
+
+    function openEdit(item) {
+      editing.value = true;
+      editForm.value = {
+        id: item.id,
+        title: item.title,
+        year: item.year,
+        type: item.type,
+        phase: item.phase,
+        rating: item.rating,
+        ratingStr: item.rating!==null&&item.rating!==undefined ? String(item.rating) : '',
+        desc: item.desc,
+        poster: item.poster || '',
+        releaseDate: item.releaseDate || ''
+      };
+    }
+
+    function saveEdit() {
+      var f = editForm.value;
+      if (!f.title.trim()) {showToast('Title is required','error');return}
+      saving.value = true;
+      var ratingVal = f.ratingStr!=='' ? Number(f.ratingStr) : null;
+      var updated = items.value.map(function(item) {
+        if (item.id !== f.id) return item;
+        var ni = {
+          id: f.id,
+          title: f.title.trim(),
+          year: Number(f.year),
+          phase: Number(f.phase),
+          type: f.type,
+          rating: ratingVal,
+          desc: f.desc.trim(),
+          poster: f.poster || null
+        };
+        if (f.type==='movie' && f.releaseDate) ni.releaseDate = f.releaseDate;
+        return ni;
+      });
+      var h = new Headers();
+      h.append('Content-Type','application/json');
+      h.append('Authorization','Bearer '+token.value);
+      fetch('/api/data',{method:'PUT',headers:h,body:JSON.stringify(updated)})
+        .then(function(r){return r.json()})
+        .then(function(d){
+          saving.value=false;
+          if (d.success) {
+            items.value=updated;
+            editing.value=false;
+            showToast('Entry #'+f.id+' saved successfully!','success');
+          } else {
+            showToast('Save failed: '+(d.error||'unknown'),'error');
+          }
+        })
+        .catch(function(){saving.value=false;showToast('Network error','error')});
+    }
+
+    if (token.value) loadData();
+
+    return {
+      token, loginToken, loginError, items, loading,
+      searchQuery, phaseFilter, typeFilter, page, perPage,
+      editing, editForm, saving, toast, posters,
+      stats, filteredItems, totalPages, pagedItems,
+      prevPage, nextPage,
+      doLogin, logout, openEdit, saveEdit
+    };
+  }
+}).mount('#app');
+</script>
+</body>
+</html>
